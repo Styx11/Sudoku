@@ -1,17 +1,34 @@
 function Grid (size) {
   this.size = size ? size : 9;
   this.cells = [];
-  this.box = [
-    {rowStart: 0, rowEnd: 2, colStart: 0, colEnd: 2},// box1
-    {rowStart: 0, rowEnd: 2, colStart: 3, colEnd: 5},// box2
-    {rowStart: 0, rowEnd: 2, colStart: 6, colEnd: 8},// box3
-    {rowStart: 3, rowEnd: 5, colStart: 0, colEnd: 2},// box4
-    {rowStart: 3, rowEnd: 5, colStart: 3, colEnd: 5},// box5
-    {rowStart: 3, rowEnd: 5, colStart: 6, colEnd: 8},// box6
-    {rowStart: 6, rowEnd: 8, colStart: 0, colEnd: 2},// box7
-    {rowStart: 6, rowEnd: 8, colStart: 3, colEnd: 5},// box8
-    {rowStart: 6, rowEnd: 8, colStart: 6, colEnd: 8},// box9
-  ]
+  this.boxs = {
+    9: [
+      {rowStart: 0, rowEnd: 2, colStart: 0, colEnd: 2},// box1
+      {rowStart: 0, rowEnd: 2, colStart: 3, colEnd: 5},// box2
+      {rowStart: 0, rowEnd: 2, colStart: 6, colEnd: 8},// box3
+      {rowStart: 3, rowEnd: 5, colStart: 0, colEnd: 2},// box4
+      {rowStart: 3, rowEnd: 5, colStart: 3, colEnd: 5},// box5
+      {rowStart: 3, rowEnd: 5, colStart: 6, colEnd: 8},// box6
+      {rowStart: 6, rowEnd: 8, colStart: 0, colEnd: 2},// box7
+      {rowStart: 6, rowEnd: 8, colStart: 3, colEnd: 5},// box8
+      {rowStart: 6, rowEnd: 8, colStart: 6, colEnd: 8},// box9
+    ],
+    6: [
+      {rowStart: 0, rowEnd: 1, colStart: 0, colEnd: 2},// box1
+      {rowStart: 0, rowEnd: 1, colStart: 3, colEnd: 5},// box2
+      {rowStart: 2, rowEnd: 3, colStart: 0, colEnd: 2},// box3
+      {rowStart: 2, rowEnd: 3, colStart: 3, colEnd: 5},// box4
+      {rowStart: 4, rowEnd: 5, colStart: 0, colEnd: 2},// box5
+      {rowStart: 4, rowEnd: 5, colStart: 3, colEnd: 5},// box6
+    ],
+    4: [
+      {rowStart: 0, rowEnd: 1, colStart: 0, colEnd: 1},// box1
+      {rowStart: 0, rowEnd: 1, colStart: 2, colEnd: 3},// box2
+      {rowStart: 2, rowEnd: 3, colStart: 0, colEnd: 1},// box3
+      {rowStart: 2, rowEnd: 3, colStart: 2, colEnd: 3} // box4
+    ]
+  };
+  this.box = this.boxs[this.size];
   this.fillGrid();
 }
 
@@ -54,6 +71,7 @@ Grid.prototype.initGrid = function () {
   for (var row=0; row<this.size; row++) {
     this.cells[row] = Array.apply(null, {length: this.size});
   }
+  if (this.size !== 9) return;
   // 建立对角线宫格
   for (var index=0; index<this.size; index+=4) {
     this.fillBox(this.box[index])
@@ -68,12 +86,30 @@ Grid.prototype.initGrid = function () {
 
 // 完成九宫格填写
 Grid.prototype.fillGrid = function () {
-  this.initGrid();
-  while (true) {
-    if (this.fillBox(this.box[1]) && this.fillBox(this.box[3]) && this.fillBox(this.box[5]) && this.fillBox(this.box[7])) {
-      break;
-    } else {
+  if (this.size === 9) {
+    this.initGrid();
+    while (true) {
+      if (this.fillBox(this.box[1]) && this.fillBox(this.box[3]) && this.fillBox(this.box[5]) && this.fillBox(this.box[7])) {
+        break;
+      } else {
+        this.initGrid();
+      }
+    }
+  } else {
+    // 填写4、6尺寸的单元格
+    while (true) {
+      var flag = true;
       this.initGrid();
+      this.fillBox(this.box[0]);
+      for (var index=1; index<this.size; index++) {
+        if (!this.fillBox(this.box[index])) {
+          flag = false;
+          break;
+        }
+      }
+      if (flag) {
+        break;
+      }
     }
   }
   return true;
