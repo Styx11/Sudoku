@@ -1,3 +1,8 @@
 var grid = new Grid(9);
-
-console.log(grid.cells);
+// level = {
+//   easy: 3,
+//   normal: 4,
+//   hard: 6,
+// }
+var gameCells = grid.gameCells(6);
+console.log(gameCells);

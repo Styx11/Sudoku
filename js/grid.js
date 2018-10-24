@@ -70,7 +70,7 @@ Grid.prototype.fillGrid = function () {
   // 持续执行，直到完成填写
   while (true) {
     var flag = true;
-    
+
     // 建立可遍历矩阵
     for (var row=0; row<this.size; row++) {
       this.cells[row] = Array.apply(null, {length: this.size});
@@ -88,6 +88,26 @@ Grid.prototype.fillGrid = function () {
     }
   }
   return true;
+}
+
+// 按难度返回九宫格
+Grid.prototype.gameCells = function (level) {
+  var gameCells = this.cells;
+  var length = level;
+  var shuffled = [];
+  var shuffledCol = 0;
+
+  // 按难度每行去除数字
+  for (var row=0; row<this.size; row++) {
+    shuffled = this.shuffle();
+
+    // 按难度截取随机数组前level个数, col序数为该数的单元格为0
+    for (var index=0; index<length; index++) {
+      shuffledCol = shuffled[index] - 1;
+      gameCells[row][shuffledCol] = 0;
+    }
+  }
+  return gameCells;
 }
 
 // 根据九宫格位置填写九宫格
