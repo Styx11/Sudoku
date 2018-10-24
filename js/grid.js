@@ -65,51 +65,26 @@ Grid.prototype.shuffle = function (arr) {
   return shuffled;
 }
 
-// 初始化栅格，包括初始化、建立对角线九宫格、建立反对角线九宫格
-Grid.prototype.initGrid = function () {
-  // 建立可遍历矩阵
-  for (var row=0; row<this.size; row++) {
-    this.cells[row] = Array.apply(null, {length: this.size});
-  }
-  if (this.size !== 9) return;
-  // 建立对角线宫格
-  for (var index=0; index<this.size; index+=4) {
-    this.fillBox(this.box[index])
-  }
-  // 填写反对角九宫格 (比填写中间九宫格效率高，所以一并执行)
-  while (true) {
-    if (this.fillBox(this.box[2]) && this.fillBox(this.box[6])) {
-      break;
-    }
-  }
-}
-
-// 完成九宫格填写
+// 初始化并完成九宫格填写
 Grid.prototype.fillGrid = function () {
-  if (this.size === 9) {
-    this.initGrid();
-    while (true) {
-      if (this.fillBox(this.box[1]) && this.fillBox(this.box[3]) && this.fillBox(this.box[5]) && this.fillBox(this.box[7])) {
+  // 持续执行，直到完成填写
+  while (true) {
+    var flag = true;
+    
+    // 建立可遍历矩阵
+    for (var row=0; row<this.size; row++) {
+      this.cells[row] = Array.apply(null, {length: this.size});
+    }
+
+    // 按宫填写数字
+    for (var index=0; index<this.size; index++) {
+      if (!this.fillBox(this.box[index])) {
+        flag = false;// 标记某宫填写失败
         break;
-      } else {
-        this.initGrid();
       }
     }
-  } else {
-    // 填写4、6尺寸的单元格
-    while (true) {
-      var flag = true;
-      this.initGrid();
-      this.fillBox(this.box[0]);
-      for (var index=1; index<this.size; index++) {
-        if (!this.fillBox(this.box[index])) {
-          flag = false;
-          break;
-        }
-      }
-      if (flag) {
-        break;
-      }
+    if (flag) {
+      break;
     }
   }
   return true;
