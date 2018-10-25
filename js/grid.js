@@ -92,7 +92,7 @@ Grid.prototype.fillGrid = function () {
 
 // 按难度返回九宫格
 Grid.prototype.gameCells = function (level) {
-  var gameCells = this.cells;
+  var gameCells = this.deepClone(this.cells);
   var length = level;
   var shuffled = [];
   var shuffledCol = 0;
@@ -157,4 +157,12 @@ Grid.prototype.hash = function (index, line) {
     }
   }
   return hash;
+}
+
+// 实现原九宫格的深拷贝
+Grid.prototype.deepClone = function (obj) {
+  var _obj = JSON.stringify(obj);
+  var objClone = JSON.parse(_obj);
+
+  return objClone;
 }
