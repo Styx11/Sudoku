@@ -1,12 +1,41 @@
 .game-grid {
+  width: 100%;
+  margin: 0 auto;
   text-align: center;
   font-size: .8rem;
 }
-.grid-row {
-  width: 100%;
-  height: 1.2rem;
-  line-height: 1.2rem;
+.grid-row:nth-child(3n) {
+  border-bottom: 1px solid #000;
 }
 .grid-cell {
-  margin: 0 .4rem;
+  height: 2.4rem !important;
+  width: 2.4rem !important;
+  display: flex;
+  font-size: 1.7rem;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+.grid-cell:nth-child(3n) {
+  border-right: 1px solid #000;
+}
+@media only screen and (min-width: 768px) {
+  .game-grid {
+    width: 30rem;
+    height: 30rem;
+  }
+  .grid-cell {
+    font-weight: 400;
+    font-size: 3rem;
+  }
+}
+@media only screen and (max-width: 320px) {
+  .grid-cell {
+    height: 2rem !important;
+    width: 2rem !important;
+    font-weight: 400;
+    font-size: 1.4rem;
+  }
 }

@@ -1,4 +1,4 @@
-var grid = new Grid(9);
+
 // level = {
 //   easy: 1/3,
 //   normal: 1/2,
@@ -8,7 +8,24 @@ var grid = new Grid(9);
 var sudoku = new Vue({
   el: '#sudoku',
   data: {
-    cells: grid.gameCells(4),
+    size: 9,
+  },
+  computed: {
+    grid: function () {
+      var grid = new Grid(this.size);
+      return {
+        grid: grid,
+        gameGrid: grid.gameCells(4)
+      }
+    },
+    bindClass: function () {
+      return {
+        cellSize: 'mdui-row-xs-' + this.size
+      }
+    }
+  },
+  mounted: function () {
+
   }
 })
 // console.log(grid.cells);
