@@ -11,4 +11,4 @@ var sudoku = new Vue({
     cells: grid.gameCells(4),
   }
 })
-console.log(grid.cells);
+// console.log(grid.cells);
