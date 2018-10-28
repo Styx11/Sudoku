@@ -31,29 +31,18 @@
         </a>
     </div>
     </div>
+
     <div id="sudoku">
-      <table class="game-grid mdui-container-fluid">
-        <tbody>
-        <tr
-          class="grid-row mdui-btn-group"
-          :class="bindClass.cellSize"
-          v-for="row in grid.gameGrid"
-        >
-          <td
-            class="grid-cell mdui-col mdui-btn mdui-btn-icon mdui-ripple"
-            v-for="item in row"
-          >
-            <span v-if="item">{{ item }}</span>
-            <span v-else class="mdui-text-color-white">?</span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <game-grid
+        :cellSize="bindClass.cellSize"
+        :grid="grid.gameGrid"
+      ></game-grid>
     </div>
   
-  <script src="./js/grid.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="./components/game-grid.js"></script>
+  <script src="./js/grid.js"></script>
   <script src="./js/entrance.js"></script>
 </body>
 </html>
