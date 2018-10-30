@@ -3,6 +3,7 @@
 //   normal: 1/2,
 //   hard: 1-1/3,
 // }
+var bus = new Vue();
 
 var sudoku = new Vue({
   el: '#sudoku',
