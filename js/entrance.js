@@ -26,6 +26,11 @@ var sudoku = new Vue({
       }
     }
   },
+  methods: {
+    reset: function () {
+      bus.$emit('resetGrid');
+    }
+  },
   mounted: function () {
 
   }
