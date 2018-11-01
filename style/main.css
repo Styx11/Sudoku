@@ -22,6 +22,12 @@
 .grid-cell:nth-child(3n) {
   border-right: 1px solid #000;
 }
+.grid-cell:hover {
+  background-color: rgb(201, 225, 249);
+}
+.grid-cell-marked {
+  background-color: rgb(182, 216, 247);
+}
 @media only screen and (min-width: 768px) {
   .game-grid {
     width: 30rem;

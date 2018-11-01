@@ -13,10 +13,11 @@ var sudoku = new Vue({
   computed: {
     grid: function () {
       var grid = new Grid(this.size);
+      var originalGrid = grid.cells;
       var gameGrid = grid.gameCells(4);
 
       return {
-        grid: grid,
+        originalGrid: originalGrid,
         gameGrid: gameGrid
       }
     },
