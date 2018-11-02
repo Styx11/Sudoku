@@ -142,9 +142,9 @@ Vue.component('game-grid', {
     gameGrid: function () {
       var grid = JSON.stringify(this.grid);
       var gameGrid = JSON.stringify(this.gameGrid);
+      var disabled = (grid === gameGrid);
 
-      if (grid !== gameGrid) return;
-      bus.$emit('checkBtnDisabled');
+      bus.$emit('checkBtnDisabled', disabled);
     }
   }
 })
