@@ -27,7 +27,7 @@ Vue.component('game-grid', {
           class="grid-cell mdui-col mdui-ripple"\
           v-for="(col, colIndex) in row"\
           @click="selectCell(rowIndex, colIndex)"\
-          :class="{\'grid-cell-marked\': markGrid[rowIndex][colIndex]}"\
+          :class="markClass(rowIndex, colIndex)"\
         >\
           <span v-if="col && grid[rowIndex][colIndex]">{{ col }}</span>\
           <span \
@@ -57,16 +57,26 @@ Vue.component('game-grid', {
       }
     },
     // 按照序列标记单元格
-    markTile: function (rowIndex, colIndex) {
-      var cellValue = !this.markGrid[rowIndex][colIndex];
+    markTile: function (rowIndex, colIndex, markValue) {
 
-      this.$set(this.markGrid[rowIndex], colIndex, cellValue);
+      this.$set(this.markGrid[rowIndex], colIndex, markValue);
+    },
+    // 对标记单元格应用的类
+    markClass: function (rowIndex, colIndex) {
+      var tile = this.markGrid[rowIndex][colIndex];
+      var markClass = {
+        1: 'grid-cell-marked',
+        2: 'grid-cell-marked-incorrect'
+      }
+
+      if (!markClass[tile]) return;
+      return markClass[tile];
     }
   },
   created: function () {
     var gridSize = this.grid.length;
 
-    // 将数独九宫格与另一个九宫格对应
+    // 将数独九宫格与另一个九宫格关联
     // 它记录了单元格是否被标记
     for (var row=0; row<gridSize; row++) {
       this.$set(this.markGrid, row, Array.apply(null, {length: gridSize}));
@@ -92,6 +102,7 @@ Vue.component('game-grid', {
 
       if (rowIndex === undefined && colIndex === undefined) return;
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
+      _this.markTile(rowIndex, colIndex, 0);// 清除标记
     })
 
     // 监听数字标记
@@ -102,7 +113,8 @@ Vue.component('game-grid', {
       if (rowIndex === undefined && colIndex === undefined) return;
       if (!_this.gameGrid[rowIndex][colIndex]) return;
 
-      _this.markTile(rowIndex, colIndex);
+      var markValue = _this.markGrid[rowIndex][colIndex] === 1 ? 0 : 1;
+      _this.markTile(rowIndex, colIndex, markValue);
     })
 
     // 监听重置事件
@@ -110,6 +122,29 @@ Vue.component('game-grid', {
       _this.gameGrid = JSON.parse(JSON.stringify(_this.grid));
     })
 
-    // 监听查重事件
+    // 监听查错事件
+    bus.$on('checkGrid', function () {
+      var length = _this.gameGrid.length;
+
+      for (var row=0; row<length; row++) {
+        for (var col=0; col<length; col++) {
+          if (!_this.gameGrid[row][col]) continue;
+
+          if (_this.originalgrid[row][col] !== _this.gameGrid[row][col]) {
+            _this.markTile(row, col, 2);
+          }
+        }
+      }
+    })
+  },
+  watch: {
+    // 当九宫格无变化时禁用查错按钮
+    gameGrid: function () {
+      var grid = JSON.stringify(this.grid);
+      var gameGrid = JSON.stringify(this.gameGrid);
+
+      if (grid !== gameGrid) return;
+      bus.$emit('checkBtnDisabled');
+    }
   }
 })
