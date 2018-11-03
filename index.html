@@ -8,52 +8,40 @@
   <link rel="stylesheet" href="./style/main.css">
   <title>Document</title>
 </head>
-<body class="mdui-theme-primary-light-blue mdui-appbar-with-toolbar mdui-loaded">
+<body class="mdui-theme-primary-light-blue mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
-    <div id="sudoku">
-      <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-          <span class="mdui-text-color-white mdui-typo-title">Sudoku</span>
-          <div class="mdui-toolbar-spacer"></div>
-          <a href="https://github.com/Styx11/Sudoku" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
-              <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
-              c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
-              c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
-              c-0.2-0.4-0.7-2.1,0.2-4.3c0,0,1.4-0.4,4.5,1.7c1.3-0.4,2.7-0.5,4.1-0.5c1.4,0,2.8,0.2,4.1,0.5c3.1-2.1,4.5-1.7,4.5-1.7
-              c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
-              c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
-            </svg>
-          </a>
-          <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: '#menu'}">
+  <div id="sudoku" v-cloak>
+    <mdui-header :title="'Sudoku'" :github="'https://github.com/Styx11/Sudoku'">
+      <template slot="menu">
+        <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: '#menu'}">
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>
-          </a>
-          <ul class="mdui-menu" id="menu">
-            <li class="mdui-menu-item mdui-ripper" @click="reset">
-              <a class="mdui-ripple">Reset</a>
-            </li>
-            <li class="mdui-menu-item mdui-ripper">
-              <a href="javascript:;">Help & feedback</a>
-            </li>
-            <li class="mdui-menu-item mdui-ripper">
-              <a>Settings</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      
-      <game-grid
-        :cellSize="bindClass.cellSize"
-        :grid="grid.gameGrid"
-        :originalGrid="grid.originalGrid"
-      ></game-grid>
-      <key-input></key-input>
-    </div>
+        </a>
+        <ul class="mdui-menu" id="menu">
+          <li class="mdui-menu-item mdui-ripper" @click="reset">
+            <a class="mdui-ripple">Reset</a>
+          </li>
+          <li class="mdui-menu-item mdui-ripper">
+            <a href="javascript:;">Help & feedback</a>
+          </li>
+          <li class="mdui-menu-item mdui-ripper">
+            <a>Settings</a>
+          </li>
+        </ul>
+      </template>
+    </mdui-header>
+    <game-grid
+      :cellSize="bindClass.cellSize"
+      :grid="grid.gameGrid"
+      :originalGrid="grid.originalGrid"
+    ></game-grid>
+    <key-input></key-input>
+  </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="./components/game-grid.js"></script>
+  <script src="./components/game_grid.js"></script>
   <script src="./components/keyboard.js"></script>
+  <script src="./components/mdui_header.js"></script>
   <script src="./js/grid.js"></script>
   <script src="./js/entrance.js"></script>
 </body>
