@@ -8,13 +8,15 @@ var bus = new Vue();
 var sudoku = new Vue({
   el: '#sudoku',
   data: {
-    size: 9,
+    size: 0,
+    level: 0
   },
   computed: {
     grid: function () {
       var grid = new Grid(this.size);
       var originalGrid = grid.cells;
-      var gameGrid = grid.gameCells(4);
+      var level = Math.floor(this.size * this.level);
+      var gameGrid = grid.gameCells(level);
 
       return {
         originalGrid: originalGrid,
@@ -30,10 +32,17 @@ var sudoku = new Vue({
   methods: {
     reset: function () {
       bus.$emit('resetGrid');
-    }
-  },
-  mounted: function () {
+    },
+    start: function (size, level) {
+      var levels = {
+        0: 1/3,
+        1: 1/2,
+        2: 2/3
+      }
 
+      this.size = size;
+      this.level = levels[level];
+    }
   }
 })
 // console.log(grid.cells);

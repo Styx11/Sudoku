@@ -17,6 +17,9 @@
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>
         </a>
         <ul class="mdui-menu" id="menu">
+          <li class="mdui-menu-item mdui-ripper" @click="start(9, 2)">
+              <a class="mdui-ripple">Start</a>
+          </li>
           <li class="mdui-menu-item mdui-ripper" @click="reset">
             <a class="mdui-ripple">Reset</a>
           </li>
@@ -30,11 +33,13 @@
       </template>
     </mdui-header>
     <game-grid
+      v-if="size"
       :cellSize="bindClass.cellSize"
       :grid="grid.gameGrid"
       :originalGrid="grid.originalGrid"
     ></game-grid>
     <key-input></key-input>
+    <level-selector @start="startGame($event)"></level-selector>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
@@ -42,6 +47,7 @@
   <script src="./components/game_grid.js"></script>
   <script src="./components/keyboard.js"></script>
   <script src="./components/mdui_header.js"></script>
+  <script src="./components/level_selector.js"></script>
   <script src="./js/grid.js"></script>
   <script src="./js/entrance.js"></script>
 </body>
