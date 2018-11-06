@@ -35,8 +35,8 @@
     <game-grid
       v-if="size"
       :cellSize="bindClass.cellSize"
-      :grid="grid.gameGrid"
-      :originalGrid="grid.originalGrid"
+      :grid="gameGrid"
+      :originalGrid="originalGrid"
     ></game-grid>
     <key-input></key-input>
     <level-selector @start="startGame($event)"></level-selector>
@@ -47,7 +47,7 @@
   <script src="./components/game_grid.js"></script>
   <script src="./components/keyboard.js"></script>
   <script src="./components/mdui_header.js"></script>
-  <script src="./components/level_selector.js"></script>
+  <script src="./components/game_selector.js"></script>
   <script src="./js/grid.js"></script>
   <script src="./js/entrance.js"></script>
 </body>
