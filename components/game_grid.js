@@ -1,8 +1,8 @@
 Vue.component('game-grid', {
   props:[
-    'cellsize',
+    'gridClass',
     'grid',
-    'originalgrid'
+    'originGrid'
   ],
   data: function () {
     return {
@@ -20,7 +20,7 @@ Vue.component('game-grid', {
       <tbody>\
       <tr\
         class="grid-row"\
-        :class="cellsize"\
+        :class="gridClass"\
         v-for="(row, rowIndex) in gameGrid"\
       >\
         <td\
@@ -60,6 +60,8 @@ Vue.component('game-grid', {
     markTile: function (rowIndex, colIndex, markValue) {
 
       this.$set(this.markGrid[rowIndex], colIndex, markValue);
+      localStorageManager.setGameState("markGrid", this.markGrid);
+
     },
     // 对标记单元格应用的类
     markClass: function (rowIndex, colIndex) {
@@ -74,7 +76,18 @@ Vue.component('game-grid', {
     }
   },
   created: function () {
+    // 应用本地缓存
     var gridSize = this.grid.length;
+    var gamingGrid = localStorageManager.getGameState("gamingGrid");// 游戏中用于填写的九宫格缓存
+    var markGrid = localStorageManager.getGameState("markGrid");// 游戏中用于标记的九宫格缓存
+
+    if (gamingGrid) {
+      this.gameGrid = gamingGrid;
+    }
+    if (markGrid) {
+      this.markGrid = markGrid;
+      return;
+    }
 
     // 将数独九宫格与另一个九宫格关联
     // 它记录了单元格是否被标记
@@ -93,6 +106,10 @@ Vue.component('game-grid', {
       if (rowIndex === undefined && colIndex === undefined) return;
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
       _this.$set(_this.gameGrid[rowIndex], colIndex, e);
+      _this.markTile(rowIndex, colIndex, 0);// 清除标记
+
+      // 记录缓存
+      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
     })
 
     // 监听数字清除
@@ -103,6 +120,9 @@ Vue.component('game-grid', {
       if (rowIndex === undefined && colIndex === undefined) return;
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
+
+      // 记录缓存
+      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
     })
 
     // 监听数字标记
@@ -120,6 +140,16 @@ Vue.component('game-grid', {
     // 监听重置事件
     bus.$on('resetGrid', function () {
       _this.gameGrid = JSON.parse(JSON.stringify(_this.grid));
+
+      // 重置标记九宫格
+      var gridSize = _this.grid.length;
+      for (var row=0; row<gridSize; row++) {
+        _this.$set(_this.markGrid, row, Array.apply(null, {length: gridSize}));
+      }
+
+      // 记录缓存
+      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
+      localStorageManager.setGameState("markGrid", _this.markGrid);
     })
 
     // 监听查错事件
@@ -130,7 +160,7 @@ Vue.component('game-grid', {
         for (var col=0; col<length; col++) {
           if (!_this.gameGrid[row][col]) continue;
 
-          if (_this.originalgrid[row][col] !== _this.gameGrid[row][col]) {
+          if (_this.originGrid[row][col] !== _this.gameGrid[row][col]) {
             _this.markTile(row, col, 2);
           }
         }

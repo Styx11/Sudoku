@@ -1,4 +1,5 @@
 var bus = new Vue();
+var localStorageManager = new localStorageManager();
 
 var sudoku = new Vue({
   el: '#sudoku',
@@ -9,29 +10,45 @@ var sudoku = new Vue({
       1: 1/2,
       2: 2/3
     },
-    originalGrid: [],
+    originGrid: [],
     gameGrid: []
   },
   computed: {
     bindClass: function () {
       return {
-        cellSize: 'mdui-row-xs-' + this.size
+        gridClass: 'mdui-row-xs-' + this.size
       }
     }
+  },
+  created: function () {
+    // 应用本地缓存
+    var originGrid = localStorageManager.getGameState("originGrid");
+    var gameGrid = localStorageManager.getGameState("gameGrid");
+
+    if (!originGrid || !gameGrid) return;
+    this.originGrid = originGrid;
+    this.gameGrid = gameGrid;
+    this.size = gameGrid.length;
   },
   methods: {
     reset: function () {
       bus.$emit('resetGrid');
     },
     start: function (size, level) {
+      localStorageManager.clearGameState();// 清除上一次缓存
+
       this.size = this.size ? 0 : size;
       if (!this.size) return;// 将每次均执行改为开关，解决组件缓存
 
-      var level = Math.floor(this.size * this.levels[level]);
       var grid = new Grid(this.size);
+      var level = Math.floor(this.size * this.levels[level]);
 
-      this.originalGrid = grid.cells;
+      this.originGrid = grid.cells;
       this.gameGrid = grid.gameCells(level);
+
+      // 记录缓存
+      localStorageManager.setGameState("originGrid", this.originGrid);
+      localStorageManager.setGameState("gameGrid", this.gameGrid);
     }
   }
 })
