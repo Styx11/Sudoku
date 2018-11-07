@@ -11,15 +11,25 @@
 <body class="mdui-theme-primary-light-blue mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
   <div id="sudoku" v-cloak>
+    <div class="mdui-dialog" id="restart">
+      <div class="mdui-dialog-title">确认开始新游戏?</div>
+      <div class="mdui-dialog-content">你将丢失当前游戏进度</div>
+      <div class="mdui-dialog-actions">
+        <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+        <button class="mdui-btn mdui-ripple" @click="start(9, 2)" mdui-dialog-confirm>确定</button>
+      </div>
+    </div>
+
     <mdui-header :title="'Sudoku'" :github="'https://github.com/Styx11/Sudoku'">
       <template slot="menu">
         <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: '#menu'}">
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>
         </a>
         <ul class="mdui-menu" id="menu">
-          <li class="mdui-menu-item mdui-ripper" @click="start(9, 2)">
-              <a class="mdui-ripple">Start</a>
+          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: '#restart'}">
+              <a class="mdui-ripple">新游戏</a>
           </li>
+          </div>
           <li class="mdui-menu-item mdui-ripper" @click="reset">
             <a class="mdui-ripple">Reset</a>
           </li>
@@ -32,14 +42,20 @@
         </ul>
       </template>
     </mdui-header>
+
     <game-grid
       v-if="size"
-      :cellSize="bindClass.cellSize"
+      :grid-class="bindClass.gridClass"
       :grid="gameGrid"
-      :originalGrid="originalGrid"
+      :origin-grid="originGrid"
     ></game-grid>
+    <button
+      v-else
+      class=" selector-btn mdui-btn mdui-btn-raised mdui-ripple mdui-color-light-blue mdui-text-color-white"
+      mdui-dialog="{target: '#selector'}">选择游戏</button>
+    <level-selector @start="start($event.size, $event.level)"></level-selector>
+
     <key-input></key-input>
-    <level-selector @start="startGame($event)"></level-selector>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
@@ -48,6 +64,7 @@
   <script src="./components/keyboard.js"></script>
   <script src="./components/mdui_header.js"></script>
   <script src="./components/game_selector.js"></script>
+  <script src="./js/localStorage_manager.js"></script>
   <script src="./js/grid.js"></script>
   <script src="./js/entrance.js"></script>
 </body>
