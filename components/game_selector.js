@@ -1,4 +1,4 @@
-Vue.component('level-selector', {
+Vue.component('game-selector', {
   data: function () {
     return {
       size: 0,
@@ -31,7 +31,11 @@ Vue.component('level-selector', {
       </div>\
       <div class="mdui-dialog-actions">\
         <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>\
-        <button class="mdui-btn mdui-ripple" @click="$emit(\'start\', gameData)" mdui-dialog-confirm>确定</button>\
+        <button class="mdui-btn mdui-ripple"\
+        v-if="size"\
+        @click="$emit(\'start\', gameData)" mdui-dialog-confirm>确定</button>\
+        \
+        <button class="mdui-btn mdui-ripple" v-else disabled mdui-dialog-confirm>确定</button>\
       </div>\
     </div>\
   ',
