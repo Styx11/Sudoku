@@ -43,6 +43,7 @@
       </template>
     </mdui-header>
 
+    <div class="game">
     <game-grid
       v-if="size"
       :grid-class="bindClass.gridClass"
@@ -51,8 +52,9 @@
     ></game-grid>
     <button
       v-else
-      class=" selector-btn mdui-btn mdui-btn-raised mdui-ripple mdui-color-light-blue mdui-text-color-white"
+      class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"
       mdui-dialog="{target: '#selector'}">选择游戏</button>
+    </div>
     <game-selector @start="start($event.size, $event.level)"></game-selector>
 
     <key-input></key-input>
