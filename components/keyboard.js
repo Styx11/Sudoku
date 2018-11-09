@@ -2,7 +2,8 @@ Vue.component('key-input', {
   data: function () {
     return {
       btnDisabled: true,
-      checkDisabled: true
+      checkDisabled: true,
+      gameComplete: false
     }
   },
   template: "\
@@ -11,18 +12,20 @@ Vue.component('key-input', {
         <span \
           v-for='n in 9'\
           @click='inputNum(n)'\
-          class='keyboard-tile'\
+          class='keyboard-tile mdui-shadow-1'\
           :style='disabledClass(btnDisabled).btn'\
           :class='disabledClass(btnDisabled).ripple'\
           >{{ n }}</span>\
       </div>\
       <div class='keyboard-operate'>\
-        <span class='keyboard-tile' @click='markTile'\
+        <span class='keyboard-tile mdui-shadow-1' @click='markTile'\
         :style='disabledClass(btnDisabled).btn' :class='disabledClass(btnDisabled).ripple'>标记</span>\
-        <span class='keyboard-tile' @click='delNum'\
+        <span class='keyboard-tile mdui-shadow-1' @click='delNum'\
         :style='disabledClass(btnDisabled).btn' :class='disabledClass(btnDisabled).ripple'>清除</span>\
-        <span class='keyboard-tile mdui-ripple' @click='checkGrid'\
+        <span v-if='!gameComplete' class='keyboard-tile mdui-ripple mdui-shadow-1' @click='checkGrid'\
         :style='disabledClass(checkDisabled).btn' :class='disabledClass(btnDisabled).ripple'>查错</span>\
+        <span v-else class='keyboard-tile mdui-ripple mdui-shadow-1'\
+        mdui-dialog='{target: \"#complete\"}'>查错</span>\
       </div>\
     </div>\
   ",
@@ -66,6 +69,11 @@ Vue.component('key-input', {
     // 监听差错按钮是否可用
     bus.$on('checkBtnDisabled', function (disabled) {
       _this.checkDisabled = disabled;
+    })
+
+    // 监听游戏是否完成
+    bus.$on('gameComplete', function (complete) {
+      _this.gameComplete = complete;
     })
   }
 })

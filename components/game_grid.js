@@ -172,9 +172,12 @@ Vue.component('game-grid', {
     gameGrid: function () {
       var grid = JSON.stringify(this.grid);
       var gameGrid = JSON.stringify(this.gameGrid);
-      var disabled = (grid === gameGrid);
+      var originGrid = JSON.stringify(this.originGrid);
+      var disabled = (gameGrid ===  grid);// 禁用查错
+      var gameComplete = (gameGrid === originGrid);// 是否完成游戏
 
       bus.$emit('checkBtnDisabled', disabled);
+      bus.$emit('gameComplete', gameComplete);
     }
   }
 })
