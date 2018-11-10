@@ -1,3 +1,6 @@
+#sudoku {
+  width: 100%;
+}
 .game {
   position: relative;
   width: 100%;
@@ -10,13 +13,26 @@
   text-align: center;
   font-size: .8rem;
 }
-.grid-row:nth-child(3n) {
-  border-bottom: 1px solid #000;
+tr.grid-row-9:nth-child(3) td.grid-cell{
+  border-bottom: 2px solid #000;
 }
+tr.grid-row-9:nth-child(6) td.grid-cell{
+  border-bottom: 2px solid #000;
+}
+tr.grid-row-6:nth-child(2) td.grid-cell{
+  border-bottom: 2px solid #000;
+}
+tr.grid-row-6:nth-child(4) td.grid-cell{
+  border-bottom: 2px solid #000;
+}
+tr.grid-row-4:nth-child(2) td.grid-cell{
+  border-bottom: 2px solid #000;
+}
+
 .grid-cell {
-  height: 2.4rem !important;
-  width: 2.4rem !important;
-  display: flex;
+  height: 2.61rem;
+  width: 2.61rem;
+  display: inline-flex;
   font-size: 1.7rem;
   text-align: center;
   flex-direction: column;
@@ -24,9 +40,19 @@
   border: 1px solid #cccccc;
   border-collapse: collapse;
 }
-.grid-cell:nth-child(3n) {
-  border-right: 1px solid #000;
+.grid-row-9 .grid-cell:nth-child(3) {
+  border-right: 2px solid #000;
 }
+.grid-row-9 .grid-cell:nth-child(6) {
+  border-right: 2px solid #000;
+}
+.grid-row-6 .grid-cell:nth-child(3) {
+  border-right: 2px solid #000;
+}
+.grid-row-4 .grid-cell:nth-child(2) {
+  border-right: 2px solid #000;
+}
+
 .grid-cell:hover {
   background-color: rgb(201, 225, 249);
 }
@@ -36,22 +62,133 @@
 .grid-cell-marked-incorrect {
   background-color: rgb(240, 208, 208);
 }
-@media only screen and (min-width: 768px) {
-  .game-grid {
-    width: 30rem;
-    height: 30rem;
-  }
+
+/* iPhone 5/SE */
+@media only screen and (max-width: 320px) {
   .grid-cell {
-    font-weight: 400;
+    height: 1.955rem;
+    width: 1.955rem;
+    font-size: 1.4rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 3.07rem;
+    width: 3.07rem;
+    font-size: 1.4rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 4.72rem;
+    width: 4.72rem;
+    font-size: 1.8rem;
+  }
+}
+/* Galaxy S5 */
+@media only screen and (min-width: 360px) {
+  .grid-cell {
+    height: 2.23rem;
+    width: 2.23rem;
+    font-size: 1.4rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 3.47rem;
+    width: 3.47rem;
+    font-size: 1.6rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 5.35rem;
+    width: 5.35rem;
     font-size: 2rem;
   }
 }
-@media only screen and (max-width: 320px) {
+/* iPhone 6/7/8 */
+@media only screen and (min-width: 375px) {
   .grid-cell {
-    height: 2rem !important;
-    width: 2rem !important;
-    font-weight: 400;
-    font-size: 1.4rem;
+    height: 2.34rem;
+    width: 2.34rem;
+    font-size: 1.5rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 3.64rem;
+    width: 3.64rem;
+    font-size: 1.6rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 5.58rem;
+    width: 5.58rem;
+    font-size: 2rem;
+  }
+}
+/* Pixel 2 */
+@media only screen and (min-width: 411px) {
+  .grid-cell {
+    height: 2.59rem;
+    width: 2.59rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 4.02rem;
+    width: 4.02rem;
+    font-size: 1.8rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 6.15rem;
+    width: 6.15rem;
+    font-size: 2rem;
+  }
+}
+/* iPhone 6/7/8 Plus */
+@media only screen and (min-width: 414px) {
+  .grid-cell {
+    height: 2.61rem;
+    width: 2.61rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 4.05rem;
+    width: 4.05rem;
+    font-size: 1.8rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 6.19rem;
+    width: 6.19rem;
+    font-size: 2rem;
+  }
+}
+/* iPad */
+@media only screen and (min-width: 768px) {
+  .grid-cell {
+    height: 4.2rem;
+    width: 4.2rem;
+    font-size: 2.3rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 6.2rem;
+    width: 6.2rem;
+    font-size: 3rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 8.5rem;
+    width: 8.5rem;
+    font-size: 3.2rem;
+  }
+}
+/* iPad Pro */
+@media only screen and (min-width: 1024px) {
+  .game-grid {
+    margin-top: 4rem;
+    margin-left: 7rem;
+  }
+  .grid-cell {
+    height: 5rem;
+    width: 5rem;
+    font-size: 2.6rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 7.5rem;
+    width: 7.5rem;
+    font-size: 3.5rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 10.6rem;
+    width: 10.6rem;
+    font-size: 4.2rem;
   }
 }
 

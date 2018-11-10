@@ -1,12 +1,12 @@
 Vue.component('game-grid', {
   props:[
-    'gridClass',
     'grid',
     'originGrid'
   ],
   data: function () {
     return {
       gameGrid: JSON.parse(JSON.stringify(this.grid)),
+      size: this.grid.length,
       cells: {
         rowIndex: undefined,
         colIndex: undefined
@@ -16,15 +16,14 @@ Vue.component('game-grid', {
     }
   },
   template: '\
-    <table class="game-grid mdui-container-fluid">\
+    <table class="game-grid" cellspacing="0">\
       <tbody>\
       <tr\
-        class="grid-row"\
-        :class="gridClass"\
+        :class="\'grid-row-\' + size"\
         v-for="(row, rowIndex) in gameGrid"\
       >\
         <td\
-          class="grid-cell mdui-col mdui-ripple"\
+          class="grid-cell mdui-ripple"\
           v-for="(col, colIndex) in row"\
           @click="selectCell(rowIndex, colIndex)"\
           :class="markClass(rowIndex, colIndex)"\
