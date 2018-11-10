@@ -1,4 +1,4 @@
-Vue.component('key-input', {
+Vue.component('game-keyboard', {
   data: function () {
     return {
       btnDisabled: true,
