@@ -10,6 +10,14 @@
 </head>
 <body class="mdui-theme-primary-light-blue mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
+  <!-- 游戏无错误（在Vue实例创建前挂载）-->
+  <div class="mdui-dialog" id="correct">
+    <div class="mdui-dialog-content">未发现错误</div>
+    <div class="mdui-dialog-actions">
+      <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>继续</button>
+    </div>
+  </div>
+
   <div id="sudoku" v-cloak>
     <!-- 新游戏对话框 -->
     <div class="mdui-dialog" id="restart">
@@ -54,15 +62,15 @@
     </mdui-header>
 
     <div class="game">
-    <game-grid
-      v-if="size"
-      :grid="gameGrid"
-      :origin-grid="originGrid"
-    ></game-grid>
-    <button
-      v-else
-      class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"
-      mdui-dialog="{target: '#selector'}">选择游戏</button>
+      <game-grid
+        v-if="size"
+        :grid="gameGrid"
+        :origin-grid="originGrid"
+      ></game-grid>
+      <button
+        v-else
+        class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"
+        mdui-dialog="{target: '#selector'}">选择游戏</button>
     </div>
     <game-selector @start="start($event.size, $event.level)"></game-selector>
 

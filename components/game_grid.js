@@ -7,12 +7,18 @@ Vue.component('game-grid', {
     return {
       gameGrid: JSON.parse(JSON.stringify(this.grid)),
       size: this.grid.length,
+
+      // 用于当前选中单元格
       cells: {
         rowIndex: undefined,
         colIndex: undefined
       },
+
       // 用于单元格标记
-      markGrid: []
+      markGrid: [],
+
+      // 差错结果是否正确
+      answerCorrect: false
     }
   },
   template: '\
@@ -103,6 +109,7 @@ Vue.component('game-grid', {
       var colIndex = _this.cells.colIndex;
 
       if (rowIndex === undefined && colIndex === undefined) return;
+
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
       _this.$set(_this.gameGrid[rowIndex], colIndex, e);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
@@ -117,6 +124,7 @@ Vue.component('game-grid', {
       var colIndex = _this.cells.colIndex;
 
       if (rowIndex === undefined && colIndex === undefined) return;
+
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
 
@@ -154,6 +162,7 @@ Vue.component('game-grid', {
     // 监听查错事件
     bus.$on('checkGrid', function () {
       var length = _this.gameGrid.length;
+      var answerCorrect = true;
 
       for (var row=0; row<length; row++) {
         for (var col=0; col<length; col++) {
@@ -161,12 +170,16 @@ Vue.component('game-grid', {
 
           if (_this.originGrid[row][col] !== _this.gameGrid[row][col]) {
             _this.markTile(row, col, 2);
+            answerCorrect = false;
           }
         }
       }
+
+      _this.answerCorrect = answerCorrect;
     })
   },
   watch: {
+
     // 当九宫格无变化时禁用查错按钮
     gameGrid: function () {
       var grid = JSON.stringify(this.grid);
@@ -177,6 +190,14 @@ Vue.component('game-grid', {
 
       bus.$emit('checkBtnDisabled', disabled);
       bus.$emit('gameComplete', gameComplete);
+    },
+
+    // 答案正确时打开提示框
+    answerCorrect: function () {
+      if (!this.answerCorrect) return;
+
+      inst.open();
+      this.answerCorrect = false;
     }
   }
 })

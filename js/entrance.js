@@ -1,4 +1,5 @@
 var bus = new Vue();
+var inst = new mdui.Dialog('#correct');
 var localStorageManager = new localStorageManager();
 
 var sudoku = new Vue({
@@ -14,11 +15,7 @@ var sudoku = new Vue({
     gameGrid: []
   },
   computed: {
-    bindClass: function () {
-      return {
-        gridClass: 'mdui-row-xs-' + this.size
-      }
-    }
+    
   },
   created: function () {
     // 应用本地缓存
