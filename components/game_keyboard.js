@@ -1,4 +1,10 @@
 Vue.component('game-keyboard', {
+  props: {
+    keyRange: {
+      type: Number,
+      require: true
+    }
+  },
   data: function () {
     return {
       btnDisabled: true,
@@ -13,17 +19,20 @@ Vue.component('game-keyboard', {
           v-for='n in 9'\
           @click='inputNum(n)'\
           class='keyboard-tile mdui-shadow-1'\
-          :style='disabledClass(btnDisabled).btn'\
-          :class='disabledClass(btnDisabled).ripple'\
+          :style='disabledClass(btnDisabled || n>keyRange).btn'\
+          :class='disabledClass(btnDisabled || n>keyRange).ripple'\
           >{{ n }}</span>\
       </div>\
       <div class='keyboard-operate'>\
         <span class='keyboard-tile mdui-shadow-1' @click='markTile'\
-        :style='disabledClass(btnDisabled).btn' :class='disabledClass(btnDisabled).ripple'>标记</span>\
+        :style='disabledClass(btnDisabled).btn'\
+        :class='disabledClass(btnDisabled).ripple'>标记</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='delNum'\
-        :style='disabledClass(btnDisabled).btn' :class='disabledClass(btnDisabled).ripple'>清除</span>\
+        :style='disabledClass(btnDisabled).btn'\
+        :class='disabledClass(btnDisabled).ripple'>清除</span>\
         <span v-if='!gameComplete' class='keyboard-tile mdui-ripple mdui-shadow-1' @click='checkGrid'\
-        :style='disabledClass(checkDisabled).btn' :class='disabledClass(btnDisabled).ripple'>查错</span>\
+        :style='disabledClass(checkDisabled).btn'\
+        :class='disabledClass(checkDisabled).ripple'>查错</span>\
         <span v-else class='keyboard-tile mdui-ripple mdui-shadow-1'\
         mdui-dialog='{target: \"#complete\"}'>查错</span>\
       </div>\
@@ -31,6 +40,7 @@ Vue.component('game-keyboard', {
   ",
   methods: {
     inputNum: function (n) {
+      if (n > this.keyRange) return;
       bus.$emit('inputNum', n);
     },
     markTile: function () {

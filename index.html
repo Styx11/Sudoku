@@ -74,7 +74,7 @@
     </div>
     <game-selector @start="start($event.size, $event.level)"></game-selector>
 
-    <game-keyboard></game-keyboard>
+    <game-keyboard :key-range="size"></game-keyboard>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
