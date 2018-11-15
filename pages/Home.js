@@ -1,4 +1,4 @@
-Vue.component("home-page", {
+Vue.component("HomePage", {
   data: function () {
     return {
       size: 0,
@@ -44,11 +44,11 @@ Vue.component("home-page", {
           <li v-if="size" class="mdui-menu-item mdui-ripper" @click="reset">\
             <a class="mdui-ripple">重置</a>\
           </li>\
-          <li class="mdui-menu-item mdui-ripper">\
-            <a href="javascript:;">Help & feedback</a>\
+          <li class="mdui-menu-item mdui-ripper" @click="go(\'HelpPage\')">\
+            <a href="javascript:;">帮助 & 反馈</a>\
           </li>\
-          <li class="mdui-menu-item mdui-ripper">\
-            <a>Settings</a>\
+          <li class="mdui-menu-item mdui-ripper" @click="go(\'SettingPage\')">\
+            <a>设置</a>\
           </li>\
         </ul>\
       </template>\
@@ -81,6 +81,9 @@ Vue.component("home-page", {
     this.size = gameGrid.length;
   },
   methods: {
+    go: function (path) {
+      bus.$emit('go', path);
+    }, 
     reset: function () {
       bus.$emit('resetGrid');
     },

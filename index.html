@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="./style/main.css">
   <title>Document</title>
 </head>
-<body class="mdui-theme-primary-light-blue mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
+<body class="mdui-theme-primary-light-blue mdui-theme-accent-pink mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
   <!-- 游戏无错误（在Vue实例创建前挂载）-->
   <div class="mdui-dialog" id="correct">
@@ -19,9 +19,8 @@
   </div>
 
   <div id="sudoku" v-cloak>
-    <keep-alive>
-      <component :is="page"></component>
-    </keep-alive>
+    <!-- 取消keep-alive防止菜单位置缓存bug -->
+    <component :is="page"></component>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
@@ -31,8 +30,9 @@
   <script src="./components/mdui_header.js"></script>
   <script src="./components/game_selector.js"></script>
   <script src="./pages/Home.js"></script>
+  <script src="./pages/help/Help.js"></script>
   <script src="./js/localStorage_manager.js"></script>
   <script src="./js/grid.js"></script>
-  <script src="./js/entrance.js"></script>
+  <script src="./js/main.js"></script>
 </body>
 </html>

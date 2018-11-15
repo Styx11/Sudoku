@@ -5,6 +5,14 @@ var localStorageManager = new localStorageManager();
 var sudoku = new Vue({
   el: '#sudoku',
   data: {
-    page: "home-page"
+    page: "HomePage"
+  },
+  mounted: function () {
+    var _this = this;
+
+    // 模拟路由
+    bus.$on('go', function (path) {
+      _this.page = path;
+    })
   }
 })
