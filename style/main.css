@@ -365,3 +365,17 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     font-size: 2.5rem;
   }
 }
+
+.help-img-row {
+  max-width: 300px;
+}
+.help-img-col {
+  max-width: 50px;
+}
+.help-img-box {
+  max-width: 260px;
+  max-height: 260px;
+}
+.img-col-container {
+  width: 20rem;
+}
