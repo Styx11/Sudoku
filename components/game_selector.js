@@ -33,7 +33,7 @@ Vue.component('game-selector', {
         <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>\
         <button class="mdui-btn mdui-ripple"\
         v-if="size"\
-        @click="$emit(\'start\', gameData)" mdui-dialog-confirm>确定</button>\
+        @click="start" mdui-dialog-confirm>确定</button>\
         \
         <button class="mdui-btn mdui-ripple" v-else disabled mdui-dialog-confirm>确定</button>\
       </div>\
@@ -53,6 +53,9 @@ Vue.component('game-selector', {
     },
     selectLevel: function (level) {
       this.level = level;
+    },
+    start: function () {
+      bus.$emit("start", this.gameData);
     }
   }
 })

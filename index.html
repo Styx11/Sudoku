@@ -19,7 +19,10 @@
   </div>
 
   <div id="sudoku" v-cloak>
-    <!-- 取消keep-alive防止菜单位置缓存bug -->
+    <!-- 挂载至主程序解决选择器缓存bug -->
+    <game-selector></game-selector>
+
+    <!-- 取消keep-alive解决菜单位置缓存bug -->
     <component :is="page"></component>
   </div>
   

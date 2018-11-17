@@ -65,8 +65,7 @@ Vue.component("HomePage", {
         class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"\
         mdui-dialog="{target: \'#selector\'}">选择游戏</button>\
     </div>\
-    <game-selector @start="start($event.size, $event.level)"></game-selector>\
-  \
+    \
     <game-keyboard :key-range="size"></game-keyboard>\
   </div>\
   ',
@@ -112,5 +111,12 @@ Vue.component("HomePage", {
       localStorageManager.setGameState("originGrid", this.originGrid);
       localStorageManager.setGameState("gameGrid", this.gameGrid);
     }
+  },
+  mounted: function () {
+    var _this = this;
+
+    bus.$on('start', function (e) {
+      _this.start(e.size, e.level);
+    })
   }
 })
