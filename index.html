@@ -10,14 +10,7 @@
 </head>
 <body class="mdui-theme-primary-light-blue mdui-theme-accent-pink mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
-  <!-- 游戏无错误（在Vue实例创建前挂载）-->
-  <div class="mdui-dialog" id="correct">
-    <div class="mdui-dialog-content">未发现错误</div>
-    <div class="mdui-dialog-actions">
-      <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>继续</button>
-    </div>
-  </div>
-
+  <div id="sudoku" v-cloak>
     <!-- 挂载至主程序解决选择器缓存bug -->
     <game-selector></game-selector>
 

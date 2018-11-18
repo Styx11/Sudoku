@@ -33,8 +33,6 @@ Vue.component('game-keyboard', {
         <span v-if='!gameComplete' class='keyboard-tile mdui-ripple mdui-shadow-1' @click='checkGrid'\
         :style='disabledClass(checkDisabled).btn'\
         :class='disabledClass(checkDisabled).ripple'>查错</span>\
-        <span v-else class='keyboard-tile mdui-ripple mdui-shadow-1'\
-        mdui-dialog='{target: \"#complete\"}'>查错</span>\
       </div>\
     </div>\
   ",

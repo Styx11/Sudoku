@@ -14,23 +14,13 @@ Vue.component("HomePage", {
   template: '\
   <div>\
     <!-- 新游戏对话框 -->\
-    <div class="mdui-dialog" id="restart">\
-      <div class="mdui-dialog-title">确认开始新游戏?</div>\
-      <div class="mdui-dialog-content">你将丢失当前游戏进度</div>\
-      <div class="mdui-dialog-actions">\
-        <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>\
-        <button class="mdui-btn mdui-ripple" @click="start(9, 2)" mdui-dialog-confirm>确定</button>\
-      </div>\
-    </div>\
-    <!-- 游戏完成提示对话框 -->\
-    <div class="mdui-dialog" id="complete">\
-      <div class="mdui-dialog-title">恭喜！你已完成该题目</div>\
-      <div class="mdui-dialog-content">是否进行新游戏?</div>\
-      <div class="mdui-dialog-actions">\
-        <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>\
-        <button class="mdui-btn mdui-ripple" @click="start(9, 2)" mdui-dialog-confirm>确定</button>\
-      </div>\
-    </div>\
+    <mdui-dialog\
+      id="restart"\
+      title="确认开始新游戏?"\
+      content="你将丢失当前游戏进度"\
+      :close=true\
+      :confirm="start">\
+    </mdui-dialog>\
   \
     <mdui-header :title="\'Sudoku\'" :github="\'https://github.com/Styx11/Sudoku\'">\
       <template slot="menu">\
@@ -59,6 +49,7 @@ Vue.component("HomePage", {
         v-if="size"\
         :grid="gameGrid"\
         :origin-grid="originGrid"\
+        @start="start"\
       ></game-grid>\
       <button\
         v-else\
@@ -116,7 +107,9 @@ Vue.component("HomePage", {
     var _this = this;
 
     bus.$on('start', function (e) {
-      _this.start(e.size, e.level);
+      if (e) return _this.start(e.size, e.level);
+      
+      _this.start();
     })
   }
 })

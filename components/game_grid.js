@@ -15,13 +15,22 @@ Vue.component('game-grid', {
       },
 
       // 用于单元格标记
-      markGrid: [],
-
-      // 差错结果是否正确
-      answerCorrect: false
+      markGrid: []
     }
   },
   template: '\
+    <div>\
+    <!-- 未发现错误 -->\
+    <mdui-dialog id="correct" content="未发现错误"></mdui-dialog>\
+    <!-- 游戏完成提示对话框 -->\
+    <mdui-dialog\
+      id="complete"\
+      title="恭喜！你已完成该题目"\
+      content="是否进行新游戏?"\
+      :close=true\
+      :confirm="start">\
+    </mdui-dialog>\
+    \
     <table class="game-grid" cellspacing="0">\
       <tbody>\
       <tr\
@@ -43,6 +52,7 @@ Vue.component('game-grid', {
       </tr>\
       </tbody>\
     </table>\
+    </div>\
   ',
   methods: {
     // 选中单元格，并触发keyboard
@@ -61,6 +71,7 @@ Vue.component('game-grid', {
         bus.$emit('keyboardToggle', false);
       }
     },
+
     // 按照序列标记单元格
     markTile: function (rowIndex, colIndex, markValue) {
 
@@ -68,6 +79,7 @@ Vue.component('game-grid', {
       localStorageManager.setGameState("markGrid", this.markGrid);
 
     },
+
     // 对标记单元格应用的类
     markClass: function (rowIndex, colIndex) {
       var tile = this.markGrid[rowIndex][colIndex];
@@ -76,8 +88,25 @@ Vue.component('game-grid', {
         2: 'grid-cell-marked-incorrect'
       }
 
-      if (!markClass[tile]) return;
-      return markClass[tile];
+      if (markClass[tile]) return markClass[tile];
+    },
+
+    // 检查游戏是否打开对话框
+    checkGame: function (answerCorrect) {
+      var gameGrid = JSON.stringify(this.gameGrid);
+      var originGrid = JSON.stringify(this.originGrid);
+      var gameComplete = (gameGrid === originGrid);// 是否完成游戏
+      var instComplete = new mdui.Dialog("#complete");
+
+      if (gameComplete) return instComplete.open();
+
+      var instCorrect = new mdui.Dialog("#correct");
+
+      if (answerCorrect) return instCorrect.open();
+    },
+
+    start: function () {
+      this.$emit("start");
     }
   },
   created: function () {
@@ -86,14 +115,10 @@ Vue.component('game-grid', {
     var gamingGrid = localStorageManager.getGameState("gamingGrid");// 游戏中用于填写的九宫格缓存
     var markGrid = localStorageManager.getGameState("markGrid");// 游戏中用于标记的九宫格缓存
 
-    if (gamingGrid) {
-      this.gameGrid = gamingGrid;
-    }
-    if (markGrid) {
-      this.markGrid = markGrid;
-      return;
-    }
+    if (gamingGrid) this.gameGrid = gamingGrid;
 
+    if (markGrid) return this.markGrid = markGrid;
+    
     // 将数独九宫格与另一个九宫格关联
     // 它记录了单元格是否被标记
     for (var row=0; row<gridSize; row++) {
@@ -175,29 +200,17 @@ Vue.component('game-grid', {
         }
       }
 
-      _this.answerCorrect = answerCorrect;
+      _this.checkGame(answerCorrect);
     })
   },
   watch: {
-
     // 当九宫格无变化时禁用查错按钮
     gameGrid: function () {
       var grid = JSON.stringify(this.grid);
       var gameGrid = JSON.stringify(this.gameGrid);
-      var originGrid = JSON.stringify(this.originGrid);
       var disabled = (gameGrid ===  grid);// 禁用查错
-      var gameComplete = (gameGrid === originGrid);// 是否完成游戏
-
+      
       bus.$emit('checkBtnDisabled', disabled);
-      bus.$emit('gameComplete', gameComplete);
-    },
-
-    // 答案正确时打开提示框
-    answerCorrect: function () {
-      if (!this.answerCorrect) return;
-
-      inst.open();
-      this.answerCorrect = false;
     }
   }
 })
