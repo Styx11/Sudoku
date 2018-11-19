@@ -44,6 +44,12 @@ localStorageManager.prototype.setGameState = function (item, state) {
 
   window.localStorage.setItem(this[item], gameState);
 }
-localStorageManager.prototype.clearGameState = function (item) {
-  window.localStorage.clear();
+localStorageManager.prototype.clearGameState = function () {
+  // 不清除设置缓存
+  for (var key in this) {
+    if ((typeof this[key]) === "function") continue;
+    if (key === "settings") continue;
+
+    window.localStorage.removeItem(key);
+  }
 }
