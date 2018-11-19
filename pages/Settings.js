@@ -1,20 +1,16 @@
 Vue.component('SettingPage', {
-  data: function () {
-    return {
-      tips: false,
-      timer: false,
-      disableSolved: false,
-      dark: false
+  props: {
+    settings: {
+      type: Object,
+      require: true
     }
   },
-  computed: {
-    settings: function () {
-      return {
-        tips: this.tips,
-        timer: this.timer,
-        disableSolved: this.disableSolved,
-        dark: this.dark
-      }
+  data: function () {
+    return {
+      tips: this.settings.tips,
+      timer: this.settings.timer,
+      disableSolved: this.settings.disableSolved,
+      dark: this.settings.dark
     }
   },
   template: '\
@@ -34,7 +30,7 @@ Vue.component('SettingPage', {
           <div class="mdui-list-item-text mdui-list-item-one-line">一点小小的帮助</div>\
         </li>\
         <div class="mdui-checkbox">\
-          <input type="checkbox" v-model="tips"/>\
+          <input type="checkbox" @click="getSets(\'tips\', !tips)" v-model="tips"/>\
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
@@ -44,7 +40,7 @@ Vue.component('SettingPage', {
           <div class="mdui-list-item-text mdui-list-item-one-line">分秒必争地玩</div>\
         </li>\
         <div class="mdui-checkbox">\
-          <input type="checkbox" v-model="timer"/>\
+          <input type="checkbox" @click="getSets(\'timer\', !timer)" v-model="timer"/>\
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
@@ -54,7 +50,7 @@ Vue.component('SettingPage', {
           <div class="mdui-list-item-text mdui-list-item-one-line">当数字放置9次后按钮变为灰色</div>\
         </li>\
         <div class="mdui-checkbox">\
-          <input type="checkbox" v-model="disableSolved"/>\
+          <input type="checkbox" @click="getSets(\'disableSolved\', !disableSolved)" v-model="disableSolved"/>\
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
@@ -62,7 +58,7 @@ Vue.component('SettingPage', {
       <label class="mdui-list-item mdui-ripple">\
         <li class="mdui-list-item-content">深色模式</li>\
         <div class="mdui-checkbox">\
-          <input type="checkbox" v-model="dark"/>\
+          <input type="checkbox" @click="getSets(\'dark\', !dark)" v-model="dark"/>\
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
@@ -74,12 +70,12 @@ Vue.component('SettingPage', {
   methods: {
     go: function (path) {
       bus.$emit('go', path);
-    }
-  },
-  watch: {
-    // 监视并发出设置事件
-    settings: function () {
-      bus.$emit('getSets', this.settings);
+    },
+    getSets: function (item, setting) {
+      bus.$emit('getSets', {
+        item: item,
+        setting: setting
+      })
     }
   }
 })

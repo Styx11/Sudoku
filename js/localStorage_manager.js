@@ -30,6 +30,7 @@ function localStorageManager () {
   this.gameGrid   = "gameGrid";
   this.gamingGrid = "gamingGrid";
   this.markGrid   = "markGrid";
+  this.settings   = "settings";
   this.page = "page";
 }
 
