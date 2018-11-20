@@ -11,9 +11,6 @@
 <body class="mdui-theme-primary-light-blue mdui-theme-accent-pink mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
   <div id="sudoku" v-cloak>
-    <!-- 挂载至主程序解决选择器缓存bug -->
-    <game-selector></game-selector>
-
     <!-- 取消keep-alive解决菜单位置缓存bug -->
     <component :is="page" :settings="settings"></component>
   </div>

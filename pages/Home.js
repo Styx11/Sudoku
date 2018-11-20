@@ -51,10 +51,7 @@ Vue.component("HomePage", {
         :origin-grid="originGrid"\
         @start="start"\
       ></game-grid>\
-      <button\
-        v-else\
-        class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"\
-        mdui-dialog="{target: \'#selector\'}">选择游戏</button>\
+      <game-selector v-else @start="start($event.size, $event.level)"></game-selector>\
     </div>\
     \
     <game-keyboard :key-range="size"></game-keyboard>\
@@ -102,14 +99,5 @@ Vue.component("HomePage", {
       localStorageManager.setGameState("originGrid", this.originGrid);
       localStorageManager.setGameState("gameGrid", this.gameGrid);
     }
-  },
-  mounted: function () {
-    var _this = this;
-
-    bus.$on('start', function (e) {
-      if (e) return _this.start(e.size, e.level);
-      
-      _this.start();
-    })
   }
 })
