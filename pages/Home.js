@@ -83,7 +83,6 @@ Vue.component("HomePage", {
         // 禁用所有按钮
         bus.$emit('keyboardToggle', true);
         bus.$emit('checkBtnDisabled', true);
-        bus.$emit('gameComplete', false);
 
         // 将每次均执行改为开关，解决组件缓存
         return;

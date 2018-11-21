@@ -8,8 +8,7 @@ Vue.component('game-keyboard', {
   data: function () {
     return {
       btnDisabled: true,
-      checkDisabled: true,
-      gameComplete: false
+      checkDisabled: true
     }
   },
   template: "\
@@ -27,15 +26,14 @@ Vue.component('game-keyboard', {
         :class='disabledClass(btnDisabled)'>标记</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='delNum'\
         :class='disabledClass(btnDisabled)'>清除</span>\
-        <span v-if='!gameComplete' class='keyboard-tile mdui-ripple mdui-shadow-1' @click='checkGrid'\
+        <span class='keyboard-tile mdui-shadow-1' @click='checkGrid'\
         :class='disabledClass(checkDisabled)'>查错</span>\
       </div>\
     </div>\
   ",
   methods: {
     inputNum: function (n) {
-      if (n > this.keyRange) return;
-      bus.$emit('inputNum', n);
+      if (n <= this.keyRange) return bus.$emit('inputNum', n);
     },
     markTile: function () {
       bus.$emit('markTile');
@@ -44,7 +42,7 @@ Vue.component('game-keyboard', {
       bus.$emit('delNum');
     },
     checkGrid: function () {
-      bus.$emit('checkGrid');
+      if (!this.checkDisabled) return bus.$emit('checkGrid');
     },
 
     // 由是否可用，返回相应的样式与类
@@ -67,11 +65,6 @@ Vue.component('game-keyboard', {
     // 监听差错按钮是否可用
     bus.$on('checkBtnDisabled', function (disabled) {
       _this.checkDisabled = disabled;
-    })
-
-    // 监听游戏是否完成
-    bus.$on('gameComplete', function (complete) {
-      _this.gameComplete = complete;
     })
   }
 })
