@@ -63,6 +63,46 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
   background-color: rgb(240, 208, 208);
 }
 
+.mdui-theme-layout-dark .grid-cell {
+  border: 1px solid #000;
+}
+.mdui-theme-layout-dark tr.grid-row-9:nth-child(3) td.grid-cell{
+  border-bottom: 2px solid #fff;
+}
+.mdui-theme-layout-dark tr.grid-row-9:nth-child(6) td.grid-cell{
+  border-bottom: 2px solid #fff;
+}
+.mdui-theme-layout-dark tr.grid-row-6:nth-child(2) td.grid-cell{
+  border-bottom: 2px solid #fff;
+}
+.mdui-theme-layout-dark tr.grid-row-6:nth-child(4) td.grid-cell{
+  border-bottom: 2px solid #fff;
+}
+.mdui-theme-layout-dark tr.grid-row-4:nth-child(2) td.grid-cell{
+  border-bottom: 2px solid #fff;
+}
+.mdui-theme-layout-dark .grid-row-9 .grid-cell:nth-child(3) {
+  border-right: 2px solid #fff;
+}
+.mdui-theme-layout-dark .grid-row-9 .grid-cell:nth-child(6) {
+  border-right: 2px solid #fff;
+}
+.mdui-theme-layout-dark .grid-row-6 .grid-cell:nth-child(3) {
+  border-right: 2px solid #fff;
+}
+.mdui-theme-layout-dark .grid-row-4 .grid-cell:nth-child(2) {
+  border-right: 2px solid #fff;
+}
+.mdui-theme-layout-dark .grid-cell:hover {
+  background-color: rgb(98, 98, 98);
+}
+.mdui-theme-layout-dark .grid-cell-marked {
+  background-color: rgb(139, 194, 245);
+}
+.mdui-theme-layout-dark .grid-cell-marked-incorrect {
+  background-color: rgb(242, 168, 168);
+}
+
 /* iPhone 5/SE */
 @media only screen and (max-width: 320px) {
   .grid-cell {
@@ -202,6 +242,10 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
   text-align: center;
   font-size: 1.2rem;
   outline: none;
+}
+.mdui-theme-layout-dark .selector-btn {
+  background-color: #000 !important;
+  border: 1px solid #000 !important;
 }
 /* iPhone 5/SE */
 @media only screen and (max-width: 320px) {
