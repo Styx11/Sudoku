@@ -1,4 +1,5 @@
 var bus = new Vue();
+var body = document.getElementsByTagName('body')[0];
 var localStorageManager = new localStorageManager();
 
 var sudoku = new Vue({
@@ -22,6 +23,7 @@ var sudoku = new Vue({
   },
   mounted: function () {
     var _this = this;
+    if (_this.settings.dark) body.classList.add('mdui-theme-layout-dark');
 
     // 模拟路由
     bus.$on('go', function (path) {
@@ -35,6 +37,10 @@ var sudoku = new Vue({
       var setting = e.setting;
 
       _this.settings[item] = setting;
+      _this.settings.dark
+        ? body.classList.add('mdui-theme-layout-dark')
+        : body.classList.remove('mdui-theme-layout-dark');
+
       localStorageManager.setGameState("settings", _this.settings);
     })
   }
