@@ -15,7 +15,13 @@ Vue.component('game-grid', {
       },
 
       // 用于单元格标记
-      markGrid: []
+      markGrid: [],
+      markClass: {
+        1: 'grid-cell-marked',
+        2: 'grid-cell-incorrect',
+        3: 'grid-cell-selected',
+        4: 'grid-cell-same'
+      }
     }
   },
   template: '\
@@ -40,11 +46,11 @@ Vue.component('game-grid', {
         <td\
           class="grid-cell mdui-ripple"\
           v-for="(col, colIndex) in row"\
-          @click="selectCell(rowIndex, colIndex)"\
-          :class="markClass(rowIndex, colIndex)"\
+          @click="selectTile(rowIndex, colIndex)"\
+          :class="markStyle(rowIndex, colIndex)"\
         >\
           <span v-if="col && grid[rowIndex][colIndex]">{{ col }}</span>\
-          <span \
+          <span\
             v-else-if="col && !grid[rowIndex][colIndex]"\
             class="mdui-text-color-blue-500">{{ col }}</span>\
           <span v-else class="mdui-text-color-white"></span>\
@@ -56,19 +62,42 @@ Vue.component('game-grid', {
   ',
   methods: {
     // 选中单元格，并触发keyboard
-    selectCell: function (rowIndex, colIndex) {
-      if (this.grid[rowIndex][colIndex]) {
-        this.cells = {
-          rowIndex: undefined,
-          colIndex: undefined
+    selectTile: function (rowIndex, colIndex) {
+      var gridCell = this.grid[rowIndex][colIndex];
+
+      this.cells = {
+        rowIndex: gridCell ? undefined : rowIndex,
+        colIndex: gridCell ? undefined : colIndex
+      }
+      this.markSameNum(rowIndex, colIndex);
+      bus.$emit('keyboardToggle', gridCell);// 当选中原始单元格时禁用键盘
+    },
+
+    // 标记相同数字单元格
+    markSameNum: function (rowIndex, colIndex) {
+      var selectNum = this.gameGrid[rowIndex][colIndex];
+      
+      // 标记相同数字
+      for (var row=0; row<this.size; row++) {
+        for (var col=0; col<this.size; col++) {
+          // 跳过已标记和错误数字
+          if (this.markGrid[row][col] === 1 || this.markGrid[row][col] === 2) continue;
+
+          // 清除上一次选中和相同数字标记
+          if (this.markGrid[row][col] === 3 || this.markGrid[row][col] === 4) {
+            this.markTile(row, col, 0);
+          }
+
+          // 相同标记，数字需存在且相等
+          if (this.gameGrid[row][col] === selectNum && this.gameGrid[row][col]) {
+            this.markTile(row, col, 4);
+          }
         }
-        bus.$emit('keyboardToggle', true);
-      } else {
-        this.cells = {
-          rowIndex: rowIndex,
-          colIndex: colIndex
-        }
-        bus.$emit('keyboardToggle', false);
+      }
+
+      // 数字选中需跳过已标记及错误数字
+      if (this.markGrid[rowIndex][colIndex] !== 1 && this.markGrid[rowIndex][colIndex] !== 2) {
+        this.markTile(rowIndex, colIndex, 3);
       }
     },
 
@@ -80,15 +109,11 @@ Vue.component('game-grid', {
 
     },
 
-    // 对标记单元格应用的类
-    markClass: function (rowIndex, colIndex) {
+    // 对标记单元格应用的样式
+    markStyle: function (rowIndex, colIndex) {
       var tile = this.markGrid[rowIndex][colIndex];
-      var markClass = {
-        1: 'grid-cell-marked',
-        2: 'grid-cell-marked-incorrect'
-      }
 
-      if (markClass[tile]) return markClass[tile];
+      if (this.markClass[tile]) return this.markClass[tile];
     },
 
     // 检查游戏是否打开对话框
@@ -138,6 +163,7 @@ Vue.component('game-grid', {
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
       _this.$set(_this.gameGrid[rowIndex], colIndex, e);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
+      _this.markSameNum(rowIndex, colIndex);// 标记相同数字
 
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);
@@ -151,7 +177,7 @@ Vue.component('game-grid', {
       if (rowIndex === undefined && colIndex === undefined) return;
 
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
-      _this.markTile(rowIndex, colIndex, 0);// 清除标记
+      _this.markSameNum(rowIndex, colIndex);// 标记相同数字
 
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);

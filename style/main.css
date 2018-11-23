@@ -53,13 +53,16 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
   border-right: 2px solid #000;
 }
 
-.grid-cell:hover {
-  background-color: rgb(201, 225, 249);
+.grid-cell-same {
+  background-color: rgb(228, 241, 252);
+}
+.grid-cell-selected {
+  background-color: rgb(182, 216, 247);
 }
 .grid-cell-marked {
   background-color: rgb(182, 216, 247);
 }
-.grid-cell-marked-incorrect {
+.grid-cell-incorrect {
   background-color: rgb(240, 208, 208);
 }
 
@@ -93,13 +96,16 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
 .mdui-theme-layout-dark .grid-row-4 .grid-cell:nth-child(2) {
   border-right: 2px solid #fff;
 }
-.mdui-theme-layout-dark .grid-cell:hover {
-  background-color: rgb(98, 98, 98);
+.mdui-theme-layout-dark .grid-cell-same {
+  background-color: rgb(170, 212, 252);
+}
+.mdui-theme-layout-dark .grid-cell-selected {
+  background-color: rgb(139, 194, 245);
 }
 .mdui-theme-layout-dark .grid-cell-marked {
   background-color: rgb(139, 194, 245);
 }
-.mdui-theme-layout-dark .grid-cell-marked-incorrect {
+.mdui-theme-layout-dark .grid-cell-incorrect {
   background-color: rgb(242, 168, 168);
 }
 
