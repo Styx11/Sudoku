@@ -7,13 +7,11 @@ Vue.component('game-grid', {
     return {
       gameGrid: JSON.parse(JSON.stringify(this.grid)),
       size: this.grid.length,
-
       // 用于当前选中单元格
-      cells: {
+      selectedCell: {
         rowIndex: undefined,
         colIndex: undefined
       },
-
       // 用于单元格标记
       markGrid: [],
       markClass: {
@@ -65,16 +63,19 @@ Vue.component('game-grid', {
     selectTile: function (rowIndex, colIndex) {
       var gridCell = this.grid[rowIndex][colIndex];
 
-      this.cells = {
-        rowIndex: gridCell ? undefined : rowIndex,
-        colIndex: gridCell ? undefined : colIndex
+      this.selectedCell = {
+        rowIndex: rowIndex,
+        colIndex: colIndex
       }
-      this.markSameNum(rowIndex, colIndex);
+      this.markSameNum();
+      this.$emit('tipsToggle', this.selectedCell);// 选中单元格时，开关提示按钮
       bus.$emit('keyboardToggle', gridCell);// 当选中原始单元格时禁用键盘
     },
 
     // 标记相同数字单元格
-    markSameNum: function (rowIndex, colIndex) {
+    markSameNum: function () {
+      var rowIndex = this.selectedCell.rowIndex;
+      var colIndex = this.selectedCell.colIndex;
       var selectNum = this.gameGrid[rowIndex][colIndex];
       
       // 标记相同数字
@@ -155,10 +156,10 @@ Vue.component('game-grid', {
 
     // 监听数字输入
     bus.$on('inputNum', function (e) {
-      var rowIndex = _this.cells.rowIndex;
-      var colIndex = _this.cells.colIndex;
+      var rowIndex = _this.selectedCell.rowIndex;
+      var colIndex = _this.selectedCell.colIndex;
 
-      if (rowIndex === undefined && colIndex === undefined) return;
+      if (_this.grid[rowIndex][colIndex]) return;
 
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
       _this.$set(_this.gameGrid[rowIndex], colIndex, e);
@@ -171,10 +172,10 @@ Vue.component('game-grid', {
 
     // 监听数字清除
     bus.$on('delNum', function () {
-      var rowIndex = _this.cells.rowIndex;
-      var colIndex = _this.cells.colIndex;
+      var rowIndex = _this.selectedCell.rowIndex;
+      var colIndex = _this.selectedCell.colIndex;
 
-      if (rowIndex === undefined && colIndex === undefined) return;
+      if (_this.grid[rowIndex][colIndex]) return;
 
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
       _this.markSameNum(rowIndex, colIndex);// 标记相同数字
@@ -185,10 +186,10 @@ Vue.component('game-grid', {
 
     // 监听数字标记
     bus.$on('markTile', function () {
-      var rowIndex = _this.cells.rowIndex;
-      var colIndex = _this.cells.colIndex;
+      var rowIndex = _this.selectedCell.rowIndex;
+      var colIndex = _this.selectedCell.colIndex;
 
-      if (rowIndex === undefined && colIndex === undefined) return;
+      if (_this.grid[rowIndex][colIndex]) return;
       if (!_this.gameGrid[rowIndex][colIndex]) return;
 
       var markValue = _this.markGrid[rowIndex][colIndex] === 1 ? 0 : 1;

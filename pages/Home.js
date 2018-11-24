@@ -1,4 +1,5 @@
 Vue.component("HomePage", {
+  props: ['settings'],
   data: function () {
     return {
       size: 0,
@@ -8,7 +9,8 @@ Vue.component("HomePage", {
         2: 2/3
       },
       originGrid: [],
-      gameGrid: []
+      gameGrid: [],
+      answer: 0// 选中单元格答案
     }
   },
   template: '\
@@ -28,11 +30,15 @@ Vue.component("HomePage", {
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>\
         </a>\
         <ul class="mdui-menu" id="menu">\
-          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: \'#restart\'}">\
-              <a class="mdui-ripple">新游戏</a>\
+          <li v-if="settings.tips && size" class="mdui-menu-item mdui-ripper"\
+            :disabled="!answer" @click="showTip">\
+            <a class="mdui-ripple">显示该单元</a>\
           </li>\
           <li v-if="size" class="mdui-menu-item mdui-ripper" @click="reset">\
             <a class="mdui-ripple">重置</a>\
+          </li>\
+          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: \'#restart\'}">\
+              <a class="mdui-ripple">新游戏</a>\
           </li>\
           <li class="mdui-menu-item mdui-ripper" @click="go(\'HelpPage\')">\
             <a href="javascript:;">帮助 & 反馈</a>\
@@ -50,6 +56,7 @@ Vue.component("HomePage", {
         :grid="gameGrid"\
         :origin-grid="originGrid"\
         @start="start"\
+        @tipsToggle="tipsToggle"\
       ></game-grid>\
       <game-selector v-else @start="start($event.size, $event.level)"></game-selector>\
     </div>\
@@ -70,7 +77,20 @@ Vue.component("HomePage", {
   methods: {
     go: function (path) {
       bus.$emit('go', path);
-    }, 
+    },
+    tipsToggle: function (e) {
+      var row = e.rowIndex;
+      var col = e.colIndex;
+      var answer = this.originGrid[row][col];
+      
+      // 当选中原始数字时禁用
+      if (this.gameGrid[row][col]) return this.answer = 0;
+
+      this.answer = answer;
+    },
+    showTip: function () {
+      bus.$emit('inputNum', this.answer);
+    },
     reset: function () {
       bus.$emit('resetGrid');
     },
