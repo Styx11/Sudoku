@@ -97,13 +97,13 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
   border-right: 2px solid #fff;
 }
 .mdui-theme-layout-dark .grid-cell-same {
-  background-color: rgb(170, 212, 252);
+  background-color: rgb(92, 91, 91);
 }
 .mdui-theme-layout-dark .grid-cell-selected {
-  background-color: rgb(139, 194, 245);
+  background-color:  rgb(126, 126, 126);
 }
 .mdui-theme-layout-dark .grid-cell-marked {
-  background-color: rgb(139, 194, 245);
+  background-color: rgb(98, 98, 98);
 }
 .mdui-theme-layout-dark .grid-cell-incorrect {
   background-color: rgb(242, 168, 168);
