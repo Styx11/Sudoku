@@ -164,7 +164,7 @@ Vue.component('game-grid', {
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
       _this.$set(_this.gameGrid[rowIndex], colIndex, e);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
-      _this.markSameNum(rowIndex, colIndex);// 标记相同数字
+      _this.markSameNum();// 标记相同数字
 
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);
@@ -178,7 +178,8 @@ Vue.component('game-grid', {
       if (_this.grid[rowIndex][colIndex]) return;
 
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
-      _this.markSameNum(rowIndex, colIndex);// 标记相同数字
+      _this.markTile(rowIndex, colIndex, 0);// 清除标记
+      _this.markSameNum();// 标记空单元格，去除上次数字标记
 
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);
