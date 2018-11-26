@@ -117,20 +117,6 @@ Vue.component('game-grid', {
       if (this.markClass[tile]) return this.markClass[tile];
     },
 
-    // 检查游戏是否打开对话框
-    checkGame: function (answerCorrect) {
-      var gameGrid = JSON.stringify(this.gameGrid);
-      var originGrid = JSON.stringify(this.originGrid);
-      var gameComplete = (gameGrid === originGrid);// 是否完成游戏
-      var instComplete = new mdui.Dialog("#complete");
-
-      if (gameComplete) return instComplete.open();
-
-      var instCorrect = new mdui.Dialog("#correct");
-
-      if (answerCorrect) return instCorrect.open();
-    },
-
     start: function () {
       this.$emit("start");
     }
@@ -216,10 +202,14 @@ Vue.component('game-grid', {
     bus.$on('checkGrid', function () {
       var length = _this.gameGrid.length;
       var answerCorrect = true;
+      var gameComplete = true;
 
       for (var row=0; row<length; row++) {
         for (var col=0; col<length; col++) {
-          if (!_this.gameGrid[row][col]) continue;
+          if (!_this.gameGrid[row][col]) {
+            gameComplete = false;
+            continue;
+          }
 
           if (_this.originGrid[row][col] !== _this.gameGrid[row][col]) {
             _this.markTile(row, col, 2);
@@ -228,7 +218,13 @@ Vue.component('game-grid', {
         }
       }
 
-      _this.checkGame(answerCorrect);
+      var instComplete = new mdui.Dialog("#complete");
+
+      if (gameComplete && answerCorrect) return instComplete.open();
+
+      var instCorrect = new mdui.Dialog("#correct");
+
+      if (answerCorrect) return instCorrect.open();
     })
   },
   watch: {
