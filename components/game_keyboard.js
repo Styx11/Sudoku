@@ -7,8 +7,9 @@ Vue.component('game-keyboard', {
   },
   data: function () {
     return {
-      btnDisabled: true,
-      checkDisabled: true
+      numDisabled: true,
+      checkDisabled: true,
+      opreateDisabled: true
     }
   },
   template: "\
@@ -18,14 +19,14 @@ Vue.component('game-keyboard', {
           v-for='n in 9'\
           @click='inputNum(n)'\
           class='keyboard-tile mdui-shadow-1'\
-          :class='disabledClass(btnDisabled || n>keyRange)'\
+          :class='disabledClass(numDisabled || n>keyRange)'\
           >{{ n }}</span>\
       </div>\
       <div class='keyboard-operate'>\
         <span class='keyboard-tile mdui-shadow-1' @click='markTile'\
-        :class='disabledClass(btnDisabled)'>标记</span>\
+        :class='disabledClass(opreateDisabled)'>标记</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='delNum'\
-        :class='disabledClass(btnDisabled)'>清除</span>\
+        :class='disabledClass(opreateDisabled, true)'>清除</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='checkGrid'\
         :class='disabledClass(checkDisabled)'>查错</span>\
       </div>\
@@ -46,9 +47,9 @@ Vue.component('game-keyboard', {
     },
 
     // 由是否可用，返回相应的样式与类
-    disabledClass: function (disabled) {
+    disabledClass: function (disabled, delBtn) {
       return {
-        'mdui-ripple': !disabled,
+        'mdui-ripple': delBtn ? false : !disabled,// 取消清除按钮的涟漪效果，修复禁用后涟漪动画错位bug
         'keyboard-tile-abled': !disabled,
         'keyboard-tile-disabled': disabled
       }
@@ -57,13 +58,18 @@ Vue.component('game-keyboard', {
   mounted: function () {
     var _this = this;
 
-    // 监听键盘是否可用
-    bus.$on('keyboardToggle', function (disabled) {
-      _this.btnDisabled = disabled;
+    // 监听数字键盘是否可用
+    bus.$on('numDisabled', function (disabled) {
+      _this.numDisabled = disabled;
+    })
+
+    // 监听操作键是否可用
+    bus.$on('opreateDisabled', function (disabled) {
+      _this.opreateDisabled = disabled;
     })
 
     // 监听差错按钮是否可用
-    bus.$on('checkBtnDisabled', function (disabled) {
+    bus.$on('checkDisabled', function (disabled) {
       _this.checkDisabled = disabled;
     })
   }

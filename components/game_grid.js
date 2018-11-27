@@ -62,6 +62,7 @@ Vue.component('game-grid', {
     // 选中单元格，并触发keyboard
     selectTile: function (rowIndex, colIndex) {
       var gridCell = this.grid[rowIndex][colIndex];
+      var gameCell = this.gameGrid[rowIndex][colIndex];
 
       this.selectedCell = {
         rowIndex: rowIndex,
@@ -69,7 +70,9 @@ Vue.component('game-grid', {
       }
       this.markSameNum();
       this.$emit('tipsToggle', this.selectedCell);// 选中单元格时，开关提示按钮
-      bus.$emit('keyboardToggle', gridCell);// 当选中原始单元格时禁用键盘
+
+      bus.$emit('numDisabled', gridCell);// 当选中原始单元格时禁用数字键盘
+      bus.$emit('opreateDisabled', !gameCell || gridCell);// 选中空/原始单元格时禁用操作键
     },
 
     // 标记相同数字单元格
@@ -152,6 +155,8 @@ Vue.component('game-grid', {
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
       _this.markSameNum();// 标记相同数字
 
+      bus.$emit('opreateDisabled', false);// 启用操作键
+
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);
     })
@@ -166,6 +171,8 @@ Vue.component('game-grid', {
       _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
       _this.markTile(rowIndex, colIndex, 0);// 清除标记
       _this.markSameNum();// 标记空单元格，去除上次数字标记
+      
+      bus.$emit('opreateDisabled', true);// 禁用操作键
 
       // 记录缓存
       localStorageManager.setGameState("gamingGrid", _this.gameGrid);
@@ -234,7 +241,7 @@ Vue.component('game-grid', {
       var gameGrid = JSON.stringify(this.gameGrid);
       var disabled = (gameGrid ===  grid);// 禁用查错
       
-      bus.$emit('checkBtnDisabled', disabled);
+      bus.$emit('checkDisabled', disabled);
     }
   }
 })
