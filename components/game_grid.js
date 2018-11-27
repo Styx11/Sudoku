@@ -145,14 +145,15 @@ Vue.component('game-grid', {
 
     // 监听数字输入
     bus.$on('inputNum', function (e) {
-      var rowIndex = _this.selectedCell.rowIndex;
-      var colIndex = _this.selectedCell.colIndex;
+      var row = _this.selectedCell.rowIndex;
+      var col = _this.selectedCell.colIndex;
 
-      if (_this.grid[rowIndex][colIndex]) return;
+      if (row === undefined || col === undefined) return;// 未选中任何单元格
+      if (_this.grid[row][col]) return;// 选中原始单元格
 
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
-      _this.$set(_this.gameGrid[rowIndex], colIndex, e);
-      _this.markTile(rowIndex, colIndex, 0);// 清除标记
+      _this.$set(_this.gameGrid[row], col, e);
+      _this.markTile(row, col, 0);// 清除标记
       _this.markSameNum();// 标记相同数字
 
       bus.$emit('opreateDisabled', false);// 启用操作键
@@ -163,13 +164,14 @@ Vue.component('game-grid', {
 
     // 监听数字清除
     bus.$on('delNum', function () {
-      var rowIndex = _this.selectedCell.rowIndex;
-      var colIndex = _this.selectedCell.colIndex;
+      var row = _this.selectedCell.rowIndex;
+      var col = _this.selectedCell.colIndex;
 
-      if (_this.grid[rowIndex][colIndex]) return;
+      if (row === undefined || col === undefined) return;// 未选中任何单元格
+      if (_this.grid[row][col]) return;
 
-      _this.$set(_this.gameGrid[rowIndex], colIndex, 0);
-      _this.markTile(rowIndex, colIndex, 0);// 清除标记
+      _this.$set(_this.gameGrid[row], col, 0);
+      _this.markTile(row, col, 0);// 清除标记
       _this.markSameNum();// 标记空单元格，去除上次数字标记
       
       bus.$emit('opreateDisabled', true);// 禁用操作键
@@ -180,14 +182,15 @@ Vue.component('game-grid', {
 
     // 监听数字标记
     bus.$on('markTile', function () {
-      var rowIndex = _this.selectedCell.rowIndex;
-      var colIndex = _this.selectedCell.colIndex;
+      var row = _this.selectedCell.rowIndex;
+      var col = _this.selectedCell.colIndex;
 
-      if (_this.grid[rowIndex][colIndex]) return;
-      if (!_this.gameGrid[rowIndex][colIndex]) return;
+      if (row === undefined || col === undefined) return;// 未选中任何单元格
+      if (_this.grid[row][col]) return;
+      if (!_this.gameGrid[row][col]) return;
 
-      var markValue = _this.markGrid[rowIndex][colIndex] === 1 ? 0 : 1;
-      _this.markTile(rowIndex, colIndex, markValue);
+      var markValue = _this.markGrid[row][col] === 1 ? 0 : 1;
+      _this.markTile(row, col, markValue);
     })
 
     // 监听重置事件
