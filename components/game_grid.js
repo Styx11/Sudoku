@@ -58,6 +58,48 @@ Vue.component('game-grid', {
     </table>\
     </div>\
   ',
+  created: function () {
+    // 应用本地缓存
+    var gridSize = this.grid.length;
+    var markGrid = localStorageManager.getGameState("markGrid");// 游戏中用于标记的九宫格缓存
+    var gamingGrid = localStorageManager.getGameState("gamingGrid");// 游戏中用于填写的九宫格缓存
+
+    if (gamingGrid) this.gameGrid = gamingGrid;
+
+    if (markGrid) return this.markGrid = markGrid;
+    
+    // 将数独九宫格与另一个九宫格关联
+    // 它记录了单元格是否被标记
+    for (var row=0; row<gridSize; row++) {
+      this.$set(this.markGrid, row, Array.apply(null, {length: gridSize}));
+    }
+  },
+  mounted: function () {
+    // 监听数字输入
+    bus.$on('inputNum', this.handleNum);
+
+    // 监听数字清除
+    bus.$on('delNum', this.handleNum);
+
+    // 监听数字标记
+    bus.$on('markTile', this.markNum);
+
+    // 监听重置事件
+    bus.$on('resetGrid', this.resetGame);
+
+    // 监听查错事件
+    bus.$on('checkGrid', this.checkGame);
+  },
+  watch: {
+    // 当九宫格无变化时禁用查错按钮
+    gameGrid: function () {
+      var grid = JSON.stringify(this.grid);
+      var gameGrid = JSON.stringify(this.gameGrid);
+      var disabled = (gameGrid ===  grid);// 禁用查错
+      
+      bus.$emit('checkDisabled', disabled);
+    }
+  },
   methods: {
     // 选中单元格，并触发keyboard
     selectTile: function (rowIndex, colIndex) {
@@ -73,6 +115,38 @@ Vue.component('game-grid', {
 
       bus.$emit('numDisabled', gridCell);// 当选中原始单元格时禁用数字键盘
       bus.$emit('opreateDisabled', !gameCell || gridCell);// 选中空/原始单元格时禁用操作键
+    },
+
+    // 处理数字输入、删除
+    handleNum: function (value) {
+      var row = this.selectedCell.rowIndex;
+      var col = this.selectedCell.colIndex;
+      var value = value || 0;
+
+      if (row === undefined || col === undefined) return;// 未选中任何单元格
+      if (this.grid[row][col]) return;// 选中原始单元格
+
+      // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
+      this.$set(this.gameGrid[row], col, value);
+      this.markTile(row, col, 0);// 清除标记
+      this.markSameNum();// 标记相同数字
+
+      bus.$emit('opreateDisabled', !value);// 启用/禁用操作键
+
+      localStorageManager.setGameState("gamingGrid", this.gameGrid);// 记录缓存
+    },
+
+    // 数字标记回调
+    markNum: function () {
+      var row = this.selectedCell.rowIndex;
+      var col = this.selectedCell.colIndex;
+
+      if (row === undefined || col === undefined) return;// 未选中任何单元格
+      if (this.grid[row][col]) return;// 不标记原始单元格
+      if (!this.gameGrid[row][col]) return;// 不标记空单元格
+
+      var markValue = this.markGrid[row][col] === 1 ? 0 : 1;
+      this.markTile(row, col, markValue);
     },
 
     // 标记相同数字单元格
@@ -120,109 +194,41 @@ Vue.component('game-grid', {
       if (this.markClass[tile]) return this.markClass[tile];
     },
 
+    // 开始新游戏
     start: function () {
       this.$emit("start");
-    }
-  },
-  created: function () {
-    // 应用本地缓存
-    var gridSize = this.grid.length;
-    var gamingGrid = localStorageManager.getGameState("gamingGrid");// 游戏中用于填写的九宫格缓存
-    var markGrid = localStorageManager.getGameState("markGrid");// 游戏中用于标记的九宫格缓存
+    },
 
-    if (gamingGrid) this.gameGrid = gamingGrid;
-
-    if (markGrid) return this.markGrid = markGrid;
-    
-    // 将数独九宫格与另一个九宫格关联
-    // 它记录了单元格是否被标记
-    for (var row=0; row<gridSize; row++) {
-      this.$set(this.markGrid, row, Array.apply(null, {length: gridSize}));
-    }
-  },
-  mounted: function () {
-    var _this = this;
-
-    // 监听数字输入
-    bus.$on('inputNum', function (e) {
-      var row = _this.selectedCell.rowIndex;
-      var col = _this.selectedCell.colIndex;
-
-      if (row === undefined || col === undefined) return;// 未选中任何单元格
-      if (_this.grid[row][col]) return;// 选中原始单元格
-
-      // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
-      _this.$set(_this.gameGrid[row], col, e);
-      _this.markTile(row, col, 0);// 清除标记
-      _this.markSameNum();// 标记相同数字
-
-      bus.$emit('opreateDisabled', false);// 启用操作键
-
-      // 记录缓存
-      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
-    })
-
-    // 监听数字清除
-    bus.$on('delNum', function () {
-      var row = _this.selectedCell.rowIndex;
-      var col = _this.selectedCell.colIndex;
-
-      if (row === undefined || col === undefined) return;// 未选中任何单元格
-      if (_this.grid[row][col]) return;
-
-      _this.$set(_this.gameGrid[row], col, 0);
-      _this.markTile(row, col, 0);// 清除标记
-      _this.markSameNum();// 标记空单元格，去除上次数字标记
-      
-      bus.$emit('opreateDisabled', true);// 禁用操作键
-
-      // 记录缓存
-      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
-    })
-
-    // 监听数字标记
-    bus.$on('markTile', function () {
-      var row = _this.selectedCell.rowIndex;
-      var col = _this.selectedCell.colIndex;
-
-      if (row === undefined || col === undefined) return;// 未选中任何单元格
-      if (_this.grid[row][col]) return;
-      if (!_this.gameGrid[row][col]) return;
-
-      var markValue = _this.markGrid[row][col] === 1 ? 0 : 1;
-      _this.markTile(row, col, markValue);
-    })
-
-    // 监听重置事件
-    bus.$on('resetGrid', function () {
-      _this.gameGrid = JSON.parse(JSON.stringify(_this.grid));
+    // 重置游戏
+    resetGame: function () {
+      this.gameGrid = JSON.parse(JSON.stringify(this.grid));
 
       // 重置标记九宫格
-      var gridSize = _this.grid.length;
+      var gridSize = this.grid.length;
       for (var row=0; row<gridSize; row++) {
-        _this.$set(_this.markGrid, row, Array.apply(null, {length: gridSize}));
+        this.$set(this.markGrid, row, Array.apply(undefined, {length: gridSize}));
       }
 
       // 记录缓存
-      localStorageManager.setGameState("gamingGrid", _this.gameGrid);
-      localStorageManager.setGameState("markGrid", _this.markGrid);
-    })
+      localStorageManager.setGameState("gamingGrid", this.gameGrid);
+      localStorageManager.setGameState("markGrid", this.markGrid);
+    },
 
-    // 监听查错事件
-    bus.$on('checkGrid', function () {
-      var length = _this.gameGrid.length;
+    // 检查游戏
+    checkGame: function () {
+      var length = this.gameGrid.length;
       var answerCorrect = true;
       var gameComplete = true;
 
       for (var row=0; row<length; row++) {
         for (var col=0; col<length; col++) {
-          if (!_this.gameGrid[row][col]) {
+          if (!this.gameGrid[row][col]) {
             gameComplete = false;
             continue;
           }
 
-          if (_this.originGrid[row][col] !== _this.gameGrid[row][col]) {
-            _this.markTile(row, col, 2);
+          if (this.originGrid[row][col] !== this.gameGrid[row][col]) {
+            this.markTile(row, col, 2);
             answerCorrect = false;
           }
         }
@@ -235,16 +241,6 @@ Vue.component('game-grid', {
       var instCorrect = new mdui.Dialog("#correct");
 
       if (answerCorrect) return instCorrect.open();
-    })
-  },
-  watch: {
-    // 当九宫格无变化时禁用查错按钮
-    gameGrid: function () {
-      var grid = JSON.stringify(this.grid);
-      var gameGrid = JSON.stringify(this.gameGrid);
-      var disabled = (gameGrid ===  grid);// 禁用查错
-      
-      bus.$emit('checkDisabled', disabled);
     }
   }
 })
