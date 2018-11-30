@@ -31,7 +31,8 @@ function localStorageManager () {
   this.gamingGrid = "gamingGrid";
   this.markGrid   = "markGrid";
   this.settings   = "settings";
-  this.page = "page";
+  this.page  = "page";
+  this.timer = "timer";
 }
 
 localStorageManager.prototype.getGameState = function (item) {
