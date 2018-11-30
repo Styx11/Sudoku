@@ -447,3 +447,18 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
 .img-col-container {
   width: 20rem;
 }
+
+.timer-title {
+  position: absolute;
+  top: .5rem;
+  left: 1rem;
+  line-height: 1rem;
+}
+.game-timer {
+  position: absolute;
+  top: 2rem;
+  left: 1rem;
+  line-height: 1rem;
+  font-size: 1rem;
+  color: rgb(199, 226, 249);
+}
