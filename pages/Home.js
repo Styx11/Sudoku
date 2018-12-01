@@ -24,7 +24,7 @@ Vue.component("HomePage", {
       :confirm="start">\
     </mdui-dialog>\
   \
-    <mdui-header :title="\'Sudoku\'" :github="\'https://github.com/Styx11/Sudoku\'">\
+    <mdui-header title="Sudoku" github="https://github.com/Styx11/Sudoku" :timer="settings.timer">\
       <template slot="menu">\
         <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: \'#menu\'}">\
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>\
@@ -98,6 +98,11 @@ Vue.component("HomePage", {
       localStorageManager.clearGameState();// 清除上一次缓存
 
       this.size = this.size ? 0 : size;
+
+      // 计时器开关
+      if (this.settings.timer) {
+        bus.$emit('timerStart', this.size);
+      }
 
       if (!this.size) {
         // 禁用所有按钮
