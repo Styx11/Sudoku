@@ -12,12 +12,14 @@ Vue.component('game-timer', {
     </div>\
   ',
   created: function () {
+    var gameExist  = localStorageManager.getGameState('gameGrid');
     var timerState = localStorageManager.getGameState('timer');
 
-    if (!timerState) return;
+    // 若游戏存在则自动开始
+    if (!gameExist) return;
 
-    this.second = timerState.second || 0;
-    this.minute = timerState.minute || 0;
+    this.second = timerState ? timerState.second : 0;
+    this.minute = timerState ? timerState.minute : 0;
     this.timer  = undefined;
 
     this.start();
