@@ -19,16 +19,16 @@ Vue.component('game-keyboard', {
           v-for='n in 9'\
           @click='inputNum(n)'\
           class='keyboard-tile mdui-shadow-1'\
-          :class='disabledClass(numDisabled || n>keyRange)'\
+          :class='numClass(n)'\
           >{{ n }}</span>\
       </div>\
       <div class='keyboard-operate'>\
         <span class='keyboard-tile mdui-shadow-1' @click='markTile'\
-        :class='disabledClass(opreateDisabled)'>标记</span>\
+        :class='operateClass(opreateDisabled)'>标记</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='delNum'\
-        :class='disabledClass(opreateDisabled, true)'>清除</span>\
+        :class='operateClass(opreateDisabled, true)'>清除</span>\
         <span class='keyboard-tile mdui-shadow-1' @click='checkGrid'\
-        :class='disabledClass(checkDisabled)'>查错</span>\
+        :class='operateClass(checkDisabled)'>查错</span>\
       </div>\
     </div>\
   ",
@@ -47,9 +47,19 @@ Vue.component('game-keyboard', {
     },
 
     // 由是否可用，返回相应的样式与类
-    disabledClass: function (disabled, delBtn) {
+    operateClass: function (disabled, delBtn) {
       return {
         'mdui-ripple': delBtn ? false : !disabled,// 取消清除按钮的涟漪效果，修复禁用后涟漪动画错位bug
+        'keyboard-tile-abled': !disabled,
+        'keyboard-tile-disabled': disabled
+      }
+    },
+    numClass: function (num) {
+      var keyRange = this.keyRange;
+      var disabled = this.numDisabled || num > keyRange;
+
+      return {
+        'mdui-ripple': !disabled,
         'keyboard-tile-abled': !disabled,
         'keyboard-tile-disabled': disabled
       }
