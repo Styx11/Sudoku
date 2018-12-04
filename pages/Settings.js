@@ -44,10 +44,10 @@ Vue.component('SettingPage', {
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
-      <label class="mdui-list-item mdui-ripple">\
+      <label class="mdui-list-item mdui-ripple mdui-hidden-lg-up">\
         <li class="mdui-list-item-content">\
           <div class="mdui-list-item-title mdui-list-item-one-line">禁用已解决的数字</div>\
-          <div class="mdui-list-item-text mdui-list-item-one-line">当数字放置9次后按钮变为灰色</div>\
+          <div class="mdui-list-item-text mdui-list-item-one-line">当数字放置4/6/9次后按钮变为灰色</div>\
         </li>\
         <div class="mdui-checkbox">\
           <input type="checkbox" @click="getSets(\'disableSolved\', !disableSolved)" v-model="disableSolved"/>\
