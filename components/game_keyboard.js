@@ -3,13 +3,28 @@ Vue.component('game-keyboard', {
     keyRange: {
       type: Number,
       require: true
+    },
+    disableSolved: {
+      type: Boolean,
+      require: false
     }
   },
   data: function () {
     return {
       numDisabled: true,
       checkDisabled: true,
-      opreateDisabled: true
+      opreateDisabled: true,
+      numberSolved: {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false,
+        7: false,
+        8: false,
+        9: false 
+      }
     }
   },
   template: "\
@@ -34,7 +49,7 @@ Vue.component('game-keyboard', {
   ",
   methods: {
     inputNum: function (n) {
-      if (n <= this.keyRange) return bus.$emit('inputNum', n);
+      if (n <= this.keyRange && !this.numberSolved[n]) return bus.$emit('inputNum', n);
     },
     markTile: function () {
       bus.$emit('markTile');
@@ -55,13 +70,20 @@ Vue.component('game-keyboard', {
       }
     },
     numClass: function (num) {
-      var keyRange = this.keyRange;
-      var disabled = this.numDisabled || num > keyRange;
+      var keyRange = this.keyRange;// 数字量若达到上限，则禁用
+      var disabled = this.numDisabled || num > keyRange || this.numberSolved[num];
 
       return {
-        'mdui-ripple': !disabled,
+        'mdui-ripple': !disabled || this.disableSolved,// 开启数字量禁用时，开启涟漪
         'keyboard-tile-abled': !disabled,
         'keyboard-tile-disabled': disabled
+      }
+    },
+
+    // 处理数字完成量
+    handleNums: function (nums) {
+      for (var n in nums) {
+        this.numberSolved[n] = this.disableSolved && nums ? (nums[n] >= this.keyRange) : false;
       }
     }
   },
@@ -82,5 +104,8 @@ Vue.component('game-keyboard', {
     bus.$on('checkDisabled', function (disabled) {
       _this.checkDisabled = disabled;
     })
+
+    // 监听数字完成量
+    bus.$on('numberSolved', this.handleNums)
   }
 })

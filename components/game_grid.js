@@ -1,7 +1,8 @@
 Vue.component('game-grid', {
   props:[
     'grid',
-    'originGrid'
+    'originGrid',
+    'disableSolved'
   ],
   data: function () {
     return {
@@ -112,6 +113,7 @@ Vue.component('game-grid', {
       }
       this.markSameNum();
       this.$emit('tipsToggle', this.selectedCell);// 选中单元格时，开关提示按钮
+      if (!gridCell) this.disableSolvedNum();// 禁用数字量上线的数字
 
       bus.$emit('numDisabled', gridCell);// 当选中原始单元格时禁用数字键盘
       bus.$emit('opreateDisabled', !gameCell || gridCell);// 选中空/原始单元格时禁用操作键
@@ -130,10 +132,28 @@ Vue.component('game-grid', {
       this.$set(this.gameGrid[row], col, value);
       this.markTile(row, col, 0);// 清除标记
       this.markSameNum();// 标记相同数字
+      this.disableSolvedNum();
 
       bus.$emit('opreateDisabled', !value);// 启用/禁用操作键
 
       localStorageManager.setGameState("gamingGrid", this.gameGrid);// 记录缓存
+    },
+
+    // 处理数字数量，当开启时keyboard将其禁用
+    disableSolvedNum: function () {
+      var nums = {};
+      var num = 0;
+
+      if (!this.disableSolved) return bus.$emit('numberSolved', null);
+
+      for (var row=0; row<this.size; row++) {
+        for (var col=0; col<this.size; col++) {
+          num = this.gameGrid[row][col];
+          if (!num) continue;
+          nums[num] = nums[num] ? ++nums[num] : 1;
+        }
+      }
+      bus.$emit('numberSolved', nums);
     },
 
     // 数字标记回调
@@ -181,16 +201,13 @@ Vue.component('game-grid', {
 
     // 按照序列标记单元格
     markTile: function (rowIndex, colIndex, markValue) {
-
       this.$set(this.markGrid[rowIndex], colIndex, markValue);
       localStorageManager.setGameState("markGrid", this.markGrid);
-
     },
 
     // 对标记单元格应用的样式
     markStyle: function (rowIndex, colIndex) {
       var tile = this.markGrid[rowIndex][colIndex];
-
       if (this.markClass[tile]) return this.markClass[tile];
     },
 

@@ -55,13 +55,17 @@ Vue.component("HomePage", {
         v-if="size"\
         :grid="gameGrid"\
         :origin-grid="originGrid"\
+        :disableSolved="settings.disableSolved"\
         @start="start"\
         @tipsToggle="tipsToggle"\
       ></game-grid>\
       <game-selector v-else @start="start($event.size, $event.level)"></game-selector>\
     </div>\
     \
-    <game-keyboard :key-range="size"></game-keyboard>\
+    <game-keyboard\
+      :key-range="size"\
+      :disableSolved="settings.disableSolved">\
+    </game-keyboard>\
   </div>\
   ',
   created: function () {
