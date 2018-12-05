@@ -1,5 +1,6 @@
 var bus = new Vue();
 var body = document.getElementsByTagName('body')[0];
+var keyboardManager = new KeyboardManager(bus);
 var localStorageManager = new localStorageManager();
 
 var sudoku = new Vue({
