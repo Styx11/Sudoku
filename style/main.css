@@ -5,6 +5,11 @@
   position: relative;
   width: 100%;
 }
+@media only screen and (min-width: 1025px) {
+  .game {
+    margin: 0 auto;
+  }
+}
 
 .game-grid {
   width: 100%;
@@ -237,6 +242,23 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     font-size: 4.2rem;
   }
 }
+@media only screen and (min-width: 1025px) {
+  .grid-cell {
+    height: 4.2rem;
+    width: 4.2rem;
+    font-size: 2.3rem;
+  }
+  .grid-row-6 .grid-cell {
+    height: 6.2rem;
+    width: 6.2rem;
+    font-size: 3rem;
+  }
+  .grid-row-4 .grid-cell {
+    height: 8.5rem;
+    width: 8.5rem;
+    font-size: 3.2rem;
+  }
+}
 
 .selector-btn {
   position: absolute;
@@ -323,6 +345,12 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     height: 7rem;
     border-radius: 3.5rem;
     font-size: 2rem;
+  }
+}
+@media only screen and (min-width: 1025px) {
+  .selector-btn {
+    margin: 0 21%;
+    top: 20rem;
   }
 }
 
@@ -431,6 +459,34 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     width: 15rem;
     height: 7.8rem;
     font-size: 2.5rem;
+  }
+}
+@media only screen and (min-width: 1025px) {
+  .keyboard {
+    position: absolute;
+    overflow: hidden;
+    width: 6.6rem;
+    height: 14rem;
+    left: unset;
+    right: 22rem;
+    bottom: 22rem;
+    background-color: unset;
+  }
+  .keyboard-input {
+    display: none;
+  }
+  .keyboard-tile {
+    width: 5.8rem;
+    height: 4rem;
+    font-size: 1.3rem;
+  }
+  .keyboard-operate {
+    float: unset;
+    width: 100%;
+    height: 100%;
+  }
+  .mdui-theme-layout-dark .keyboard {
+    background-color: unset;
   }
 }
 
