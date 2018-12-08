@@ -5,6 +5,7 @@ var localStorageManager = new localStorageManager();
 
 var sudoku = new Vue({
   el: '#sudoku',
+  router: router,
   data: {
     page: "HomePage",
     settings: {
