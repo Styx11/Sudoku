@@ -12,7 +12,7 @@
 
   <div id="sudoku" v-cloak>
     <!-- 取消keep-alive解决菜单位置缓存bug -->
-    <component :is="page" :settings="settings"></component>
+    <router-view :settings="settings"></router-view>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
@@ -27,6 +27,7 @@
   <script src="./pages/Home.js"></script>
   <script src="./pages/Settings.js"></script>
   <script src="./pages/help/Help.js"></script>
+  <script src="./pages/help/help_home.js"></script>
   <script src="./pages/help/help_how.js"></script>
   <script src="./pages/help/help_trick.js"></script>
   <script src="./js/localStorage_manager.js"></script>

@@ -1,4 +1,4 @@
-Vue.component('SettingPage', {
+var SettingPage = {
   props: {
     settings: {
       type: Object,
@@ -17,7 +17,7 @@ Vue.component('SettingPage', {
     <div>\
     <mdui-header title="设置">\
       <template slot="drawer">\
-        <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="go(\'HomePage\')">\
+        <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
           <i class="mdui-icon material-icons">&#xe5c4;</i>\
         </a>\
       </template>\
@@ -68,8 +68,10 @@ Vue.component('SettingPage', {
     </div>\
   ',
   methods: {
-    go: function (path) {
-      bus.$emit('go', path);
+    goBack () {
+      window.history.length > 1
+        ? this.$router.go(-1)
+        : this.$router.push('/')
     },
     getSets: function (item, setting) {
       bus.$emit('getSets', {
@@ -78,4 +80,4 @@ Vue.component('SettingPage', {
       })
     }
   }
-})
+}

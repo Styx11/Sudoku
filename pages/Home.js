@@ -1,4 +1,4 @@
-Vue.component("HomePage", {
+var HomePage = {
   props: ['settings'],
   data: function () {
     return {
@@ -37,14 +37,14 @@ Vue.component("HomePage", {
           <li v-if="size" class="mdui-menu-item mdui-ripper" @click="reset">\
             <a class="mdui-ripple">重置</a>\
           </li>\
-          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: \'#restart\'}">\
+          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: \'#restart\', history: false}">\
               <a class="mdui-ripple">新游戏</a>\
           </li>\
-          <li class="mdui-menu-item mdui-ripper" @click="go(\'HelpPage\')">\
-            <a href="javascript:;">帮助 & 反馈</a>\
+          <li class="mdui-menu-item mdui-ripper">\
+            <router-link to="/help">帮助 & 反馈</router-link>\
           </li>\
-          <li class="mdui-menu-item mdui-ripper" @click="go(\'SettingPage\')">\
-            <a>设置</a>\
+          <li class="mdui-menu-item mdui-ripper">\
+            <router-link to="/settings">设置</router-link>\
           </li>\
         </ul>\
       </template>\
@@ -79,9 +79,6 @@ Vue.component("HomePage", {
     this.size = gameGrid.length;
   },
   methods: {
-    go: function (path) {
-      bus.$emit('go', path);
-    },
     tipsToggle: function (e) {
       var row = e.rowIndex;
       var col = e.colIndex;
@@ -128,4 +125,4 @@ Vue.component("HomePage", {
       localStorageManager.setGameState("gameGrid", this.gameGrid);
     }
   }
-})
+}

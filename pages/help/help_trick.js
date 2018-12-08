@@ -1,9 +1,9 @@
-Vue.component('HelpTrick', {
+var HelpTrick = {
   template: '\
     <div>\
       <mdui-header :title="\'解题技巧\'">\
         <template slot="drawer">\
-          <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="go(\'HelpPage\')">\
+          <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
             <i class="mdui-icon material-icons">&#xe5c4;</i>\
           </a>\
         </template>\
@@ -213,8 +213,10 @@ Vue.component('HelpTrick', {
     </div>\
   ',
   methods: {
-    go: function (path) {
-      bus.$emit('go', path);
+    goBack () {
+      window.history.length > 1
+        ? this.$router.go(-1)
+        : this.$router.push('/')
     }
   }
-})
+}
