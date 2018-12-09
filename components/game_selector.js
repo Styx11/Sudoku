@@ -9,7 +9,7 @@ Vue.component('game-selector', {
     <div>\
       <button\
         class="selector-btn mdui-shadow-2 mdui-ripple mdui-color-light-blue mdui-text-color-white"\
-        mdui-dialog="{target: \'#selector\'}"\
+        mdui-dialog="{target: \'#selector\', history: false}"\
       >选择游戏</button>\
       <div class="mdui-dialog" id="selector">\
         <div class="mdui-tab mdui-tab-full-width" id="selector-tabs" mdui-tab>\

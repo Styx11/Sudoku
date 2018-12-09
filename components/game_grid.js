@@ -251,11 +251,11 @@ Vue.component('game-grid', {
         }
       }
 
-      var instComplete = new mdui.Dialog("#complete");
+      var instComplete = new mdui.Dialog("#complete", {history: false});
 
       if (gameComplete && answerCorrect) return instComplete.open();
 
-      var instCorrect = new mdui.Dialog("#correct");
+      var instCorrect = new mdui.Dialog("#correct", {history: false});
 
       if (answerCorrect) return instCorrect.open();
     }
