@@ -1,7 +1,7 @@
 var HelpTrick = {
   template: '\
-    <div>\
-      <mdui-header :title="\'解题技巧\'">\
+    <div class="help-trick">\
+      <mdui-header title="解题技巧">\
         <template slot="drawer">\
           <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
             <i class="mdui-icon material-icons">&#xe5c4;</i>\

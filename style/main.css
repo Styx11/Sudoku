@@ -1,6 +1,17 @@
 #sudoku {
   width: 100%;
 }
+.home, .settings, .help, .help-home, .help-how, .help-trick {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 55px;
+}
+.helpRoute {
+  overflow: hidden;
+}
 .game {
   position: relative;
   width: 100%;

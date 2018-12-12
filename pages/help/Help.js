@@ -1,6 +1,6 @@
 var Help = {
   template: '\
-    <div>\
+  <div class="help">\
       <router-view></router-view>\
-    </div>'
+  </div>'
 }

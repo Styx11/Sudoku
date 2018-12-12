@@ -14,7 +14,7 @@ var HomePage = {
     }
   },
   template: '\
-  <div>\
+  <div class="home">\
     <!-- 新游戏对话框 -->\
     <mdui-dialog\
       id="restart"\

@@ -1,14 +1,14 @@
 var HelpHow = {
   template: '\
   <div class="help-how">\
-    <mdui-header :title="\'怎么玩\'">\
+    <mdui-header title="怎么玩">\
       <template slot="drawer">\
         <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
           <i class="mdui-icon material-icons">&#xe5c4;</i>\
         </a>\
       </template>\
     </mdui-header>\
-    <div class="mdui-typo-display-1 mdui-m-a-3 mdui-text-left">通过无重复地填写数字完成谜题...</div>\
+    <div class="mdui-typo-display-1 mdui-m-a-3 mdui-text-center">通过无重复地填写数字完成谜题...</div>\
     <div class="mdui-typo-display-1 mdui-m-a-5 mdui-text-center">每一行</div>\
     <div class="mdui-m-a-3">\
       <img class="help-img-row mdui-center" src="https://s1.ax1x.com/2018/11/15/iv04v6.png" alt="iv04v6.png" border="0"/>\

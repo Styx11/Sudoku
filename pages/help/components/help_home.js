@@ -1,7 +1,7 @@
 var HelpPage = {
   template: '\
-    <div class="help">\
-      <mdui-header :title="\'帮助\'">\
+    <div class="help-home">\
+      <mdui-header title="帮助">\
         <template slot="drawer">\
           <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
             <i class="mdui-icon material-icons">&#xe5c4;</i>\
