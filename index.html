@@ -12,7 +12,9 @@
 
   <div id="sudoku" v-cloak>
     <!-- 取消keep-alive解决菜单位置缓存bug -->
-    <router-view :settings="settings"></router-view>
+    <transition :enter-active-class="slideName">
+      <router-view :settings="settings" :slide-name="slideName"></router-view>
+    </transition>
   </div>
   
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>

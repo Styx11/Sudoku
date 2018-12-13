@@ -1,4 +1,5 @@
 var Help = {
+  props: ['slideName'],
   data: function () {
     return {
       helpRoute: ''
@@ -6,7 +7,9 @@ var Help = {
   },
   template: '\
   <div class="help" :class="helpRouteClass">\
+    <transition :enter-active-class="slideName">\
       <router-view></router-view>\
+    </transition>\
   </div>',
   created: function () {
     this.helpRoute = this.$router.history.current.path;// 获取当前路由路径

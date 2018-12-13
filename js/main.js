@@ -13,7 +13,8 @@ var sudoku = new Vue({
       timer: false,
       disableSolved: false,
       dark: false
-    }
+    },
+    slideName: ''
   },
   created: function () {
     // 应用页面缓存
@@ -45,5 +46,21 @@ var sudoku = new Vue({
 
       localStorageManager.setGameState("settings", _this.settings);
     })
+  },
+  watch: {
+    '$route': function (to, from) {
+      var toPath = to.path;
+      var fromPath = from.path;
+
+      if (fromPath === '/') {// 根路径split后长度也为2，所以直接判断
+        return this.slideName = 'slideInRight';
+      } else if (toPath === '/') {
+        return this.slideName = 'slideInLeft';
+      }
+
+      var toDepth = toPath.split('/').length;
+      var fromDepth = fromPath.split('/').length;
+      this.slideName = toDepth > fromDepth ? 'slideInRight' : 'slideInLeft';
+    }
   }
 })
