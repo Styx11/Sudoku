@@ -235,7 +235,6 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
 @media only screen and (min-width: 1024px) {
   .game-grid {
     margin-top: 4rem;
-    margin-left: 7rem;
   }
   .grid-cell {
     height: 5rem;
