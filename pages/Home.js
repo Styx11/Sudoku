@@ -107,11 +107,10 @@ var HomePage = {
 
       if (!this.size) {
         // 禁用所有按钮
-        bus.$emit('keyboardToggle', true);
-        bus.$emit('checkBtnDisabled', true);
-
-        // 将每次均执行改为开关，解决组件缓存
-        return;
+        bus.$emit('numDisabled', true);
+        bus.$emit('opreateDisabled', true);
+        bus.$emit('checkDisabled', true);
+        return;// 将每次均执行改为开关，解决组件缓存
       }
 
       var grid = new Grid(this.size);
