@@ -29,6 +29,19 @@ function Grid (size) {
     ]
   };
   this.box = this.boxs[this.size];
+  this.egg = [
+    {row: 1, col: 1},
+    {row: 1, col: 2},
+    {row: 2, col: 0},
+    {row: 2, col: 3},
+    {row: 3, col: 0},
+    {row: 3, col: 4},
+    {row: 4, col: 0},
+    {row: 5, col: 1},
+    {row: 6, col: 2},
+    {row: 7, col: 3},
+    {row: 8, col: 4}
+  ];
   this.fillGrid();
 }
 
@@ -91,8 +104,8 @@ Grid.prototype.fillGrid = function () {
 }
 
 // 按难度返回九宫格
-Grid.prototype.gameCells = function (level) {
-  var gameCells = this.deepClone(this.cells);
+Grid.prototype.gameGrid = function (level) {
+  var gameGrid = this.deepClone(this.cells);
   var length = level;
   var shuffled = [];
   var shuffledCol = 0;
@@ -104,10 +117,37 @@ Grid.prototype.gameCells = function (level) {
     // 按难度截取随机数组前level个数, col序数为该数的单元格为0
     for (var index=0; index<length; index++) {
       shuffledCol = shuffled[index] - 1;
-      gameCells[row][shuffledCol] = 0;
+      gameGrid[row][shuffledCol] = 0;
     }
   }
-  return gameCells;
+  return gameGrid;
+}
+
+// 游戏彩蛋
+Grid.prototype.easterEgg = function () {
+  var easterEgg = this.deepClone(this.cells);
+  var egg = this.egg;
+  var heart = [];
+
+  for (var index=0; index<9; index++) {// 创建可遍历9x9
+    heart[index] = Array.apply(null, {length: 9});
+  }
+  
+  for (var index=0; index<egg.length; index++) {
+    var row = egg[index].row;
+    var col = egg[index].col;
+    var symCol = 8 - col;// 心形为对称图形，定义一个对称列
+
+    heart[row][col] = easterEgg[row][col];// 在特定位置上填上数字
+    heart[row][symCol] = easterEgg[row][symCol];
+  }
+
+  for (var row=0; row<9; row++) {// 心形终盘默认为9x9
+    for (var col=0; col<9; col++) {
+      easterEgg[row][col] = heart[row][col] ? heart[row][col] : 0;
+    }
+  }
+  return easterEgg;
 }
 
 // 根据九宫格位置填写九宫格

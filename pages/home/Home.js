@@ -117,7 +117,7 @@ var HomePage = {
       var level = Math.floor(this.size * this.levels[level]);
 
       this.originGrid = grid.cells;
-      this.gameGrid = grid.gameCells(level);
+      this.gameGrid = grid.gameGrid(level);
 
       // 记录缓存
       localStorageManager.setGameState("originGrid", this.originGrid);
