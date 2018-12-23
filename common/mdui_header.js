@@ -13,15 +13,22 @@ Vue.component('mdui-header', {
       require: false
     }
   },
+  data: function () {
+    return {
+      eggCount: 0
+    }
+  },
   template: '\
   <div class="mdui-appbar mdui-appbar-fixed">\
     <div class="mdui-toolbar mdui-color-theme">\
       <slot name="drawer"></slot>\
-      <span v-if="timer" class="mdui-text-color-white">\
-        <span class="timer-title mdui-typo-title">{{ title }}</span>\
-        <game-timer></game-timer>\
+      <span @click="eggCount++">\
+        <span v-if="timer" class="mdui-text-color-white">\
+          <span class="timer-title mdui-typo-title">{{ title }}</span>\
+          <game-timer></game-timer>\
+        </span>\
+        <span v-else class="mdui-text-color-white mdui-typo-title">{{ title }}</span>\
       </span>\
-      <span v-else class="mdui-text-color-white mdui-typo-title">{{ title }}</span>\
       <div class="mdui-toolbar-spacer"></div>\
       <a v-if="github" :href="github" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: \'查看 Github\'}">\
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">\
@@ -36,5 +43,12 @@ Vue.component('mdui-header', {
       <slot name="menu"></slot>\
     </div>\
   </div>\
-  '
+  ',
+  watch: {
+    eggCount: function () {
+      if (this.eggCount < 10) return;
+      this.eggCount = 0;
+      this.$emit('openEgg');
+    }
+  }
 })

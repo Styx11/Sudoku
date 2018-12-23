@@ -23,8 +23,19 @@ var HomePage = {
       :close=true\
       :confirm="start">\
     </mdui-dialog>\
+    <!-- 彩蛋游戏对话框 -->\
+    <mdui-dialog\
+      id="easterEgg"\
+      title="开始彩蛋游戏?"\
+      content="你将丢失当前游戏进度"\
+      :close=true\
+      :confirm="startEgg">\
+    </mdui-dialog>\
   \
-    <mdui-header title="Sudoku" github="https://github.com/Styx11/Sudoku" :timer="settings.timer">\
+    <mdui-header title="Sudoku" github="https://github.com/Styx11/Sudoku"\
+      :timer="settings.timer"\
+      @openEgg="openEgg"\
+    >\
       <template slot="menu">\
         <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: \'#menu\'}">\
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>\
@@ -122,6 +133,27 @@ var HomePage = {
       // 记录缓存
       localStorageManager.setGameState("originGrid", this.originGrid);
       localStorageManager.setGameState("gameGrid", this.gameGrid);
+    },
+    startEgg: function () {
+      this.size = 9;
+
+      // 计时器开关
+      if (this.settings.timer) {
+        bus.$emit('timerStart', true);
+      }
+
+      var grid = new Grid(this.size);
+      this.originGrid = grid.cells;
+      this.gameGrid = grid.easterEgg();
+
+      // 记录缓存
+      localStorageManager.setGameState("originGrid", this.originGrid);
+      localStorageManager.setGameState("gameGrid", this.gameGrid);
+    },
+    openEgg: function () {
+      if (this.size) return;// 在游戏选择界面可以触发彩蛋
+      var instEgg = new mdui.Dialog('#easterEgg', {history: false});
+      instEgg.open();
     }
   }
 }
