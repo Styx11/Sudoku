@@ -21,7 +21,7 @@ var HomePage = {
       title="确认开始新游戏?"\
       content="你将丢失当前游戏进度"\
       :close=true\
-      :confirm="start">\
+      :confirm="clear">\
     </mdui-dialog>\
     <!-- 彩蛋游戏对话框 -->\
     <mdui-dialog\
@@ -67,7 +67,7 @@ var HomePage = {
         :grid="gameGrid"\
         :origin-grid="originGrid"\
         :disableSolved="settings.disableSolved"\
-        @start="start"\
+        @start="clear"\
         @tipsToggle="tipsToggle"\
       ></game-grid>\
       <game-selector v-else @start="start($event.size, $event.level)"></game-selector>\
@@ -80,8 +80,7 @@ var HomePage = {
   </div>\
   ',
   created: function () {
-    // 应用本地缓存
-    var originGrid = localStorageManager.getGameState("originGrid");
+    var originGrid = localStorageManager.getGameState("originGrid");// 应用本地缓存
     var gameGrid = localStorageManager.getGameState("gameGrid");
 
     if (!originGrid || !gameGrid) return;
@@ -95,60 +94,54 @@ var HomePage = {
       var col = e.colIndex;
       var answer = this.originGrid[row][col];
       
-      // 当选中原始数字时禁用
-      if (this.gameGrid[row][col]) return this.answer = 0;
+      if (this.gameGrid[row][col]) return this.answer = 0;// 当选中原始数字时禁用
 
       this.answer = answer;
     },
     showTip: function () {
       bus.$emit('inputNum', this.answer);
     },
+    setGameState: function () {
+      localStorageManager.setGameState("originGrid", this.originGrid);
+      localStorageManager.setGameState("gameGrid", this.gameGrid);
+    },
+    disableBtn: function () {// 禁用所有按钮
+      bus.$emit('numDisabled', true);
+      bus.$emit('checkDisabled', true);
+      bus.$emit('opreateDisabled', true);
+    },
     reset: function () {
       bus.$emit('resetGrid');
     },
-    start: function (size, level) {
+    clear: function () {// 结束当前游戏
+      if (this.settings.timer) bus.$emit('timerStart', false);
       localStorageManager.clearGameState();// 清除上一次缓存
 
-      this.size = this.size ? 0 : size;
+      this.size = 0;
+      this.disableBtn();
+    },
+    start: function (size, level) {
+      this.size = size;// 彩蛋游戏为9x9
 
-      // 计时器开关
-      if (this.settings.timer) {
-        bus.$emit('timerStart', this.size);
-      }
-
-      if (!this.size) {
-        // 禁用所有按钮
-        bus.$emit('numDisabled', true);
-        bus.$emit('opreateDisabled', true);
-        bus.$emit('checkDisabled', true);
-        return;// 将每次均执行改为开关，解决组件缓存
-      }
+      if (this.settings.timer) bus.$emit('timerStart', true);
 
       var grid = new Grid(this.size);
       var level = Math.floor(this.size * this.levels[level]);
 
       this.originGrid = grid.cells;
       this.gameGrid = grid.gameGrid(level);
-
-      // 记录缓存
-      localStorageManager.setGameState("originGrid", this.originGrid);
-      localStorageManager.setGameState("gameGrid", this.gameGrid);
+      this.setGameState();// 记录缓存
     },
     startEgg: function () {
       this.size = 9;
-
-      // 计时器开关
-      if (this.settings.timer) {
-        bus.$emit('timerStart', true);
-      }
+      
+      if (this.settings.timer) bus.$emit('timerStart', true);// 计时器开关
 
       var grid = new Grid(this.size);
+
       this.originGrid = grid.cells;
       this.gameGrid = grid.easterEgg();
-
-      // 记录缓存
-      localStorageManager.setGameState("originGrid", this.originGrid);
-      localStorageManager.setGameState("gameGrid", this.gameGrid);
+      this.setGameState();
     },
     openEgg: function () {
       if (this.size) return;// 在游戏选择界面可以触发彩蛋
