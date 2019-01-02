@@ -31,18 +31,15 @@ function localStorageManager () {
   this.gamingGrid = "gamingGrid";
   this.markGrid   = "markGrid";
   this.settings   = "settings";
-  this.page  = "page";
   this.timer = "timer";
 }
 
 localStorageManager.prototype.getGameState = function (item) {
   var gameState = JSON.parse(window.localStorage.getItem(this[item]));
-
   return gameState;
 }
 localStorageManager.prototype.setGameState = function (item, state) {
   var gameState = JSON.stringify(state);
-
   window.localStorage.setItem(this[item], gameState);
 }
 localStorageManager.prototype.clearGameState = function () {
