@@ -31,6 +31,8 @@ function localStorageManager () {
   this.gamingGrid = "gamingGrid";
   this.markGrid   = "markGrid";
   this.settings   = "settings";
+  this.gameID     = "gameID";
+  this.books = "books";
   this.timer = "timer";
 }
 
@@ -47,6 +49,7 @@ localStorageManager.prototype.clearGameState = function () {
   for (var key in this) {
     if ((typeof this[key]) === "function") continue;
     if (key === "settings") continue;
+    if (key === "books") continue;
 
     window.localStorage.removeItem(key);
   }

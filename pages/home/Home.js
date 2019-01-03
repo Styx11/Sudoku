@@ -10,6 +10,7 @@ var HomePage = {
       },
       originGrid: [],
       gameGrid: [],
+      id: 0,// 游戏id
       answer: 0// 选中单元格答案
     }
   },
@@ -37,6 +38,18 @@ var HomePage = {
       @openEgg="openEgg"\
     >\
       <template slot="menu">\
+        <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white"\
+          mdui-tooltip="{content: \'取消收藏\'}"\
+          v-if="size && marked" @click="delBook"\
+        >\
+          <i class="mdui-icon material-icons">bookmark</i>\
+        </button>\
+        <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white"\
+          mdui-tooltip="{content: \'添加收藏\'}"\
+          v-if="size && !marked" @click="markBook"\
+        >\
+          <i class="mdui-icon material-icons">bookmark_border</i>\
+        </button>\
         <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: \'#menu\'}">\
             <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>\
         </a>\
@@ -82,13 +95,47 @@ var HomePage = {
   created: function () {
     var originGrid = localStorageManager.getGameState("originGrid");// 应用本地缓存
     var gameGrid = localStorageManager.getGameState("gameGrid");
+    var id = localStorageManager.getGameState("gameID");
 
-    if (!originGrid || !gameGrid) return;
+    if (!originGrid || !gameGrid || !id) return;
     this.originGrid = originGrid;
     this.gameGrid = gameGrid;
+    this.id = id;
     this.size = gameGrid.length;
   },
+  computed: {
+    marked: function () {// 当前游戏是否被收藏
+      var id = this.id;
+      return this.$root.books.some(function (item) {
+        return (item.id === id);
+      })
+    }
+  },
   methods: {
+    createID: function () {// 根据时间创建游戏id
+      var id = (new Date()).getTime();
+      return id;
+    },
+    markBook: function () {// 收藏游戏，包括id，终盘，游戏盘
+      var book = {
+        id: this.id,
+        originGrid: JSON.stringify(this.originGrid),
+        gameGrid: JSON.stringify(this.gameGrid)
+      }
+      bus.$emit('markBook', book);
+      mdui.snackbar({// 打开底部snackbar
+        message: '收藏成功',
+        timeout: 3000
+      });
+    },
+    delBook: function () {// 根据id删除收藏
+      var id = this.id;
+      bus.$emit('delBook', id);
+      mdui.snackbar({
+        message: '取消收藏',
+        timeout: 3000
+      });
+    },
     tipsToggle: function (e) {
       var row = e.rowIndex;
       var col = e.colIndex;
@@ -104,6 +151,7 @@ var HomePage = {
     setGameState: function () {
       localStorageManager.setGameState("originGrid", this.originGrid);
       localStorageManager.setGameState("gameGrid", this.gameGrid);
+      localStorageManager.setGameState("gameID", this.id);
     },
     disableBtn: function () {// 禁用所有按钮
       bus.$emit('numDisabled', true);
@@ -125,9 +173,11 @@ var HomePage = {
 
       if (this.settings.timer) bus.$emit('timerStart', true);
 
+      var id = this.createID();
       var grid = new Grid(this.size);
       var level = Math.floor(this.size * this.levels[level]);
 
+      this.id = id;
       this.originGrid = grid.cells;
       this.gameGrid = grid.gameGrid(level);
       this.setGameState();// 记录缓存
@@ -137,8 +187,10 @@ var HomePage = {
       
       if (this.settings.timer) bus.$emit('timerStart', true);// 计时器开关
 
+      var id = this.createID();
       var grid = new Grid(this.size);
 
+      this.id = id;
       this.originGrid = grid.cells;
       this.gameGrid = grid.easterEgg();
       this.setGameState();
