@@ -30,7 +30,7 @@ var HomePage = {
       title="开始彩蛋游戏?"\
       content="你将丢失当前游戏进度"\
       :close=true\
-      :confirm="startEgg">\
+      :confirm="start">\
     </mdui-dialog>\
   \
     <mdui-header title="Sudoku" github="https://github.com/Styx11/Sudoku"\
@@ -169,31 +169,22 @@ var HomePage = {
       this.disableBtn();
     },
     start: function (size, level) {
-      this.size = size;// 彩蛋游戏为9x9
+      this.size = size || 9;// 彩蛋游戏为9x9
 
       if (this.settings.timer) bus.$emit('timerStart', true);
 
       var id = this.createID();
       var grid = new Grid(this.size);
-      var level = Math.floor(this.size * this.levels[level]);
+      var level = level
+        ? Math.ceil(this.size * this.levels[level])
+        : 0;
 
       this.id = id;
       this.originGrid = grid.cells;
-      this.gameGrid = grid.gameGrid(level);
+      this.gameGrid = level// 选择开启普通或彩蛋游戏
+        ? grid.gameGrid(level)
+        : grid.easterEgg();
       this.setGameState();// 记录缓存
-    },
-    startEgg: function () {
-      this.size = 9;
-      
-      if (this.settings.timer) bus.$emit('timerStart', true);// 计时器开关
-
-      var id = this.createID();
-      var grid = new Grid(this.size);
-
-      this.id = id;
-      this.originGrid = grid.cells;
-      this.gameGrid = grid.easterEgg();
-      this.setGameState();
     },
     openEgg: function () {
       if (this.size) return;// 在游戏选择界面可以触发彩蛋
