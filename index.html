@@ -11,7 +11,6 @@
 <body class="mdui-theme-primary-light-blue mdui-theme-accent-pink mdui-drawer-body-right mdui-appbar-with-toolbar mdui-loaded">
 
   <div id="sudoku" v-cloak>
-    <!-- 取消keep-alive解决菜单位置缓存bug -->
     <transition :enter-active-class="slideName">
       <router-view :settings="settings" :slide-name="slideName"></router-view>
     </transition>
@@ -27,7 +26,7 @@
   <script src="./common/mdui_header.js"></script>
   <script src="./common/mdui_dialog.js"></script>
   <script src="./pages/home/Home.js"></script>
-  <script src="./pages/settings/Settings.js"></script>
+  <script src="./pages/settings/components/settings_home.js"></script>
   <script src="./pages/help/Help.js"></script>
   <script src="./pages/help/components/help_home.js"></script>
   <script src="./pages/help/components/help_how.js"></script>
