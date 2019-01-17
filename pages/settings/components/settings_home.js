@@ -1,4 +1,4 @@
-var SettingPage = {
+var SettingsPage = {
   props: {
     settings: {
       type: Object,
@@ -14,7 +14,7 @@ var SettingPage = {
     }
   },
   template: '\
-    <div class="settings">\
+    <div class="settings-home">\
     <mdui-header title="设置">\
       <template slot="drawer">\
         <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white" @click="goBack">\
