@@ -3,10 +3,11 @@ var router = new VueRouter({
     { path: '', component: HomePage},
     { path: '/settings', component: Settings,
       children: [
-        { path: '', component: SettingsPage }
+        { path: '', component: SettingsPage },
+        { path: 'books', component: SettingsBooks}
       ]
     },
-    { path: '/help/', component: Help,
+    { path: '/help', component: Help,
       children: [
         { path: '', component: HelpPage },
         { path: 'how', component: HelpHow },

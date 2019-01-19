@@ -62,6 +62,11 @@ var SettingsPage = {
           <i class="mdui-checkbox-icon"></i>\
         </div>\
       </label>\
+      <router-link to="/settings/books">\
+        <label class="mdui-list-item mdui-ripple">\
+          <li class="mdui-list-item-content">书签收藏</li>\
+        </label>\
+      </router-link>\
       <li class="mdui-subheader mdui-text-color-theme-accent">版本</li>\
       <li class="mdui-list-item mdui-ripple">1.4.2</li>\
     </ul>\
