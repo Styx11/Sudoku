@@ -1,7 +1,7 @@
 #sudoku {
   width: 100%;
 }
-.home, .settings, .help, .help-home, .help-how, .help-trick, .settings-home {
+.home, .settings, .help, .help-home, .help-how, .help-trick, .settings-home, .settings-books {
   position: absolute;
   top: 0;
   left: 0;
