@@ -168,16 +168,18 @@ var HomePage = {
       this.size = 0;
       this.disableBtn();
     },
-    start: function (size, level) {
+    start: function (size, gameLevel) {
       this.size = size || 9;// 彩蛋游戏为9x9
 
       if (this.settings.timer) bus.$emit('timerStart', true);
 
       var id = this.createID();
       var grid = new Grid(this.size);
-      var level = level
-        ? Math.ceil(this.size * this.levels[level])
+      var level = gameLevel !== undefined
+        ? Math.ceil(this.size * this.levels[gameLevel])
         : 0;
+
+      if (size === 4 ) level = Math.floor((this.size + 1) * this.levels[gameLevel]);
 
       this.id = id;
       this.originGrid = grid.cells;
