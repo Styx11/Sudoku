@@ -13,6 +13,9 @@ var SettingsBooks = {
           </a>\
         </template>\
       </mdui-header>\
+      <div v-if="books.length" v-for="(book, index) in books">\
+        <book-mark :key="book.id" :book="book" :index="index + 1"></book-mark>\
+      </div>\
     </div>\
   ',
   created: function () {
