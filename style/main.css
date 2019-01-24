@@ -22,6 +22,123 @@
   }
 }
 
+.settings-books {
+  padding-top: 3.7rem;
+}
+.book-mark {
+  height: 12rem;
+  border-bottom: 2px solid rgb(217, 217, 217);
+}
+.book-icon {
+  position: absolute;
+  top: .45rem;
+  right: .9rem;
+  font-size: 1.8rem;
+  color: rgb(136, 136, 135);
+  z-index: 99;
+}
+.book-grid {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: .8rem;
+  top: 5%;
+}
+.book-desc {
+  position: absolute;
+  top: 35%;
+  left: .8rem;
+}
+.book-level {
+  font-size: 2.5rem;
+  color: rgb(137, 137, 137);
+}
+.book-index {
+  margin-left: .6rem;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: rgb(17, 17, 17);
+}
+.book-size {
+  position: absolute;
+  left: 1.2rem;
+  bottom: 1.2rem;
+  font-size: 1.2rem;
+  color: rgb(137, 137, 137);
+}
+.book-grid .grid-row-6 .grid-cell {
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: .8rem;
+}
+.book-grid .grid-row-4 .grid-cell {
+  height: 2.4rem;
+  width: 2.4rem;
+  font-size: 1.2rem;
+}
+.book-grid .grid-row-9 .grid-cell {
+  height: .94rem;
+  width: .94rem;
+  font-size: .34rem;
+}
+/* 横线 */
+.book-grid tr.grid-row-9:nth-child(3) td.grid-cell{
+  border-bottom: 1px solid #000;
+}
+.book-grid tr.grid-row-9:nth-child(6) td.grid-cell{
+  border-bottom: 1px solid #000;
+}
+.book-grid tr.grid-row-6:nth-child(2) td.grid-cell{
+  border-bottom: 1px solid #000;
+}
+.book-grid tr.grid-row-6:nth-child(4) td.grid-cell{
+  border-bottom: 1px solid #000;
+}
+.book-grid tr.grid-row-4:nth-child(2) td.grid-cell{
+  border-bottom: 1px solid #000;
+}
+/* 纵线 */
+.book-grid .grid-row-9 .grid-cell:nth-child(3) {
+  border-right: 1px solid #000;
+}
+.book-grid .grid-row-9 .grid-cell:nth-child(6) {
+  border-right: 1px solid #000;
+}
+.book-grid .grid-row-6 .grid-cell:nth-child(3) {
+  border-right: 1px solid #000;
+}
+.book-grid .grid-row-4 .grid-cell:nth-child(2) {
+  border-right: 1px solid #000;
+}
+.mdui-theme-layout-dark .book-grid tr.grid-row-9:nth-child(3) td.grid-cell{
+  border-bottom: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid tr.grid-row-9:nth-child(6) td.grid-cell{
+  border-bottom: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid tr.grid-row-6:nth-child(2) td.grid-cell{
+  border-bottom: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid tr.grid-row-6:nth-child(4) td.grid-cell{
+  border-bottom: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid tr.grid-row-4:nth-child(2) td.grid-cell{
+  border-bottom: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid .grid-row-9 .grid-cell:nth-child(3) {
+  border-right: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid .grid-row-9 .grid-cell:nth-child(6) {
+  border-right: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid .grid-row-6 .grid-cell:nth-child(3) {
+  border-right: 1px solid #fff;
+}
+.mdui-theme-layout-dark .book-grid .grid-row-4 .grid-cell:nth-child(2) {
+  border-right: 1px solid #fff;
+}
+
 .game-grid {
   width: 100%;
   height: 55%;
@@ -141,6 +258,25 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     height: 4.72rem;
     width: 4.72rem;
     font-size: 1.8rem;
+  }
+  .book-desc {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: 25%;
+    left: .8rem;
+  }
+  .book-level {
+    font-size: 2rem;
+  }
+  .book-index {
+    font-size: 2rem;
+    font-weight: 200;
+  }
+  .book-size {
+    left: 1.2rem;
+    bottom: 1.2rem;
+    font-size: 1.2rem;
   }
 }
 /* Galaxy S5 */
