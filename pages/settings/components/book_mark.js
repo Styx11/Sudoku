@@ -18,6 +18,7 @@ Vue.component('book-mark', {
         <span class="book-level">{{ levelStr }}</span>\
         <span class="book-index">#{{ index }}</span>\
       </div>\
+      <span class="book-size">{{ size }} X {{ size }}</span>\
       <i class="mdui-icon material-icons book-icon">&#xe866;</i>\
       <table class="book-grid" cellspacing="0">\
         <tbody>\
