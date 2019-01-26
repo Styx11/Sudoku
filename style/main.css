@@ -67,6 +67,11 @@
   font-size: 1.2rem;
   color: rgb(137, 137, 137);
 }
+.book-message {
+  color: #cccccc;
+  font-size: 1.8rem;
+  text-align: center;
+}
 .book-grid .grid-row-6 .grid-cell {
   height: 1.5rem;
   width: 1.5rem;
