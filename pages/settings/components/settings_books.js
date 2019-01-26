@@ -16,6 +16,7 @@ var SettingsBooks = {
       <div v-if="books.length" v-for="(book, index) in books">\
         <book-mark :key="book.id" :book="book" :index="index + 1"></book-mark>\
       </div>\
+      <p v-if="!books.length" class="book-message">目前未有收藏</p>\
     </div>\
   ',
   created: function () {
