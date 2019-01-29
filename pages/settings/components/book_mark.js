@@ -2,6 +2,8 @@ Vue.component('book-mark', {
   props: {
     book: { type: Object, required: true },
     index: { type: Number, required: true },
+    editMode: {type: Boolean, default: true},
+    bookCheck: {default: false},
   },
   data: function () {
     return {
@@ -13,8 +15,13 @@ Vue.component('book-mark', {
     }
   },
   template: '\
-    <div class="book-mark mdui-ripple" @click="bookClick">\
-      <div class="book-desc">\
+    <div class="book-mark mdui-ripple" >\
+      <label class="mdui-checkbox edit-checkbox" v-if="editMode">\
+        <input type="checkbox" :checked="bookCheck" @input="handleCheck"/>\
+        <i class="mdui-checkbox-icon"></i>\
+      </label>\
+      <div @click="bookClick">\
+      <div class="book-desc" :class="{\'edit-desc\': editMode}">\
         <span class="book-level">{{ levelStr }}</span>\
         <span class="book-index">#{{ index }}</span>\
       </div>\
@@ -36,6 +43,7 @@ Vue.component('book-mark', {
         </tr>\
         </tbody>\
       </table>\
+    </div>\
     </div>\
   ',
   computed: {
@@ -91,6 +99,9 @@ Vue.component('book-mark', {
    bookClick: function () {
      this.setGameState();
      this.goHome();
+   },
+   handleCheck: function () {
+     this.$emit('bookChecked', !this.bookCheck, this.index - 1);
    },
   }
 })
