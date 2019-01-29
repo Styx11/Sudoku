@@ -25,6 +25,14 @@
 .settings-books {
   padding-top: 3.7rem;
 }
+.edit-checkbox {
+  position: absolute;
+  top: 36%;
+  left: 1rem;
+}
+.edit-desc {
+  transform: translateX(2.2rem);
+}
 .book-mark {
   height: 12rem;
   border-bottom: 2px solid rgb(217, 217, 217);
@@ -46,6 +54,7 @@
   top: 5%;
 }
 .book-desc {
+  transition: all .2s ease-in-out;
   position: absolute;
   top: 35%;
   left: .8rem;
