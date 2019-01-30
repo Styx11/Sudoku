@@ -45,7 +45,7 @@ var SettingsBooks = {
         : this.$router.push('/')
     },
     handleBookCheck: function (check, index) {// 书签选中状态由父组件控制，绑定到子组件
-      this.bookChecks[index] = check;// 子组件触发事件修改值，利于全选、删除功能的开发
+      this.$set(this.bookChecks, index, check);// 子组件触发事件修改值，利于全选、删除功能的开发
     },
   }
 }
