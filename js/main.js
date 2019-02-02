@@ -29,6 +29,7 @@ var sudoku = new Vue({
     bus.$on('getSets', this.getSets);// 接收设置
     bus.$on('markBook', this.markBook);// 添加收藏
     bus.$on('delBook', this.delBook);// 删除收藏
+    bus.$on('delBooks', this.delBooks);// 删除列表收藏
   },
   watch: {
     '$route': function (to, from) {
@@ -73,6 +74,13 @@ var sudoku = new Vue({
       })
       this.books = books;
       localStorageManager.setGameState('books', this.books);
-    }
+    },
+    delBooks: function (books) {
+      var newBooks = this.books.filter(function (item, index) {
+        return !books[index];// 返回未被选中项
+      });
+      this.books = newBooks;
+      localStorageManager.setGameState('books', this.books);
+    },
   }
 })
