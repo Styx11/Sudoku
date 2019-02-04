@@ -22,7 +22,7 @@
 6. 书签收藏
 7. 彩蛋游戏
 
-![](https://s2.ax1x.com/2019/02/02/k8gTkd.png)
+![](https://s2.ax1x.com/2019/02/04/kJwGJf.png)
 
 ## 实现
 数独终盘的实现记录于👉[我的博客](https://styx11.github.io/blog/Projects/)
