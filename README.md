@@ -1,5 +1,5 @@
 # 数独游戏📝
-![](https://s1.ax1x.com/2018/12/16/FdQELQ.gif)
+![](https://s2.ax1x.com/2019/02/02/k8g4mD.gif)
 
 ## Dependencies
 ![](https://img.shields.io/badge/mdui-v0.4.1-blue.svg)
@@ -19,9 +19,10 @@
 3. 计时器⌛️
 4. 一些提示功能
 5. 深色模式
-6. 彩蛋游戏
+6. 书签收藏
+7. 彩蛋游戏
 
-![](https://s1.ax1x.com/2018/12/23/FyoIKS.png)
+![](https://s2.ax1x.com/2019/02/02/k8gTkd.png)
 
 ## 实现
 数独终盘的实现记录于👉[我的博客](https://styx11.github.io/blog/Projects/)
