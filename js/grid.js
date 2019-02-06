@@ -28,6 +28,9 @@ function Grid (size) {
       {rowStart: 2, rowEnd: 3, colStart: 2, colEnd: 3} // box4
     ]
   };
+  this.rowHash = [];// 行列哈希表
+  this.colHash = [];// 按宫填写失败时重置
+  this.count = 0;
   this.box = this.boxs[this.size];
   this.egg = [
     {row: 1, col: 1},
@@ -83,6 +86,8 @@ Grid.prototype.fillGrid = function () {
   // 持续执行，直到完成填写
   while (true) {
     var flag = true;
+    this.rowHash = [];// 重置
+    this.colHash = [];
 
     // 建立可遍历矩阵
     for (var row=0; row<this.size; row++) {
@@ -157,17 +162,26 @@ Grid.prototype.fillBox = function (box) {
   var colEnd = box.colEnd + 1,
     colStart = box.colStart;
   var boxHash = {};// 九宫格哈希表
+  var rowHash = this.rowHash;
+  var colHash = this.colHash;
   var shuffled = this.shuffle();
 
   for (row=rowStart; row<rowEnd; row++) {
-    var rowHash = this.hash(row, 'row');// 行哈希表
+    if (!rowHash[row]) {
+      rowHash[row] = {};
+    }
     for (col=colStart; col<colEnd; col++) {
-      var colHash = this.hash(col, 'col');// 列哈希表
+      if (!colHash[col]) {
+        colHash[col] = {};
+      }
       for (var index=0; index<shuffled.length; index++) {
         // 判断三个哈希表均无该值
-        if (!rowHash[shuffled[index]] && !colHash[shuffled[index]] && !boxHash[shuffled[index]]) {
-          boxHash[shuffled[index]] = true;// 更新九宫格哈希表
-          this.cells[row][col] = shuffled[index];
+        var value = shuffled[index];
+        if (!rowHash[row][value] && !colHash[col][value] && !boxHash[value]) {
+          boxHash[value] = true;
+          rowHash[row][value] = true;// 更新哈希表
+          colHash[col][value]  = true;
+          this.cells[row][col] = value;
           break;
         }
       }
@@ -178,25 +192,6 @@ Grid.prototype.fillBox = function (box) {
     }
   }
   return true;
-}
-
-// 返回指定列的哈希表，并携带其数目状态
-Grid.prototype.hash = function (index, line) {
-  var hash = {};
-  if (line === 'col') {
-    for (var row=0; row<this.size; row++) {
-      if (!hash[this.cells[row][index]]) {
-        hash[this.cells[row][index]] = true;
-      }
-    }
-  } else {
-    for (var col=0; col<this.size; col++) {
-      if (!hash[this.cells[index][col]]) {
-        hash[this.cells[index][col]] = true;
-      }
-    }
-  }
-  return hash;
 }
 
 // 实现原九宫格的深拷贝
