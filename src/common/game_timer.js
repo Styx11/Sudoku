@@ -1,64 +1,72 @@
-Vue.component('game-timer', {
-  data: function () {
+import LSManager from '../js/localStorage_manager';
+
+export default {
+  name: 'GameTimer',
+  data() {
     return {
       minute: 0,
       second: 0,
-      timer: undefined
-    }
+      timer: null,
+    };
   },
-  template: '\
-    <div class="game-timer">\
-      <span class="game-timer-tick">{{minute}}:{{ second < 10 ? "0" + second : second }}</span>\
-    </div>\
-  ',
-  created: function () {
-    var gameExist  = localStorageManager.getGameState('gameGrid');
-    var timerState = localStorageManager.getGameState('timer');
+  render() {
+    const minute = this.minute;
+    const second = this.second;
+    const time = `${minute}:${second < 10 ? `0${second}` : second}`;
+    return (
+      <div class='game-timer'>
+        <span class='game-timer-tick'>{ time }</span>
+      </div>
+    );
+  },
+  created() {
+    const gameExist = LSManager.getGameState('gameGrid');
+    const timerState = LSManager.getGameState('timer');
 
     // 若游戏存在则自动开始
     if (!gameExist) return;
 
     this.second = timerState ? timerState.second : 0;
     this.minute = timerState ? timerState.minute : 0;
-    this.timer  = undefined;
-
+    this.timer = null;
     this.start();
   },
-  mounted: function () {
-    bus.$on('timerStart', this.timerStart);
+  mounted() {
+    this.bus.$on('timerStart', this.timerStart);
   },
-  beforeDestroy: function () {
+  beforeDestroy() {
     this.pause();
   },
   methods: {
-    start: function () {
-      var _this = this;
-
+    start() {
       if (this.timer) return;
 
-      this.timer = setInterval(function () {
-        _this.second = (++_this.second) % 60;// 60秒取模
-        if (!(_this.second % 60)) {
-          _this.minute++;// 分钟进位
+      this.timer = setInterval(() => {
+        this.second = (++this.second) % 60;// 60秒取模
+        if (!(this.second % 60)) {
+          this.minute++;// 分钟进位
         }
-        localStorageManager.setGameState("timer", {minute: _this.minute, second: _this.second});
-      }, 1000)
+        LSManager.setGameState('timer', {minute: this.minute, second: this.second});
+      }, 1000);
     },
-    pause: function () {
+    stop() {
+      this.pause();
+      this.clear();
+    },
+    pause() {
       clearInterval(this.timer);
     },
-    clear: function () {
+    clear() {
       this.minute = 0;
       this.second = 0;
-      this.timer = undefined;
+      this.timer = null;
     },
-    timerStart: function (start) {
-      if (!start) {
-        this.pause();
-        this.clear();
-        return;
+    timerStart(start) {
+      if (start) {
+        this.start();
+      } else {
+        this.stop();
       }
-      this.start();
     }
   }
-})
+};
