@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   entry: __dirname + '/src/main.js',
   output: {
@@ -31,5 +33,10 @@ module.exports = {
         ]
       }
     ]
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
   }
 }

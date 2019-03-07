@@ -2,10 +2,10 @@
   "name": "sudoku",
   "version": "2.0.0",
   "description": "a Sudoku game",
-  "main": "../src/main.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
+    "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
   "author": "styx11",
