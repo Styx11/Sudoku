@@ -1,4 +1,4 @@
-import LSManager from '../js/localStorage_manager';
+import LSManager from '../script/localStorage_manager';
 
 export default {
   name: 'GameTimer',
@@ -36,6 +36,7 @@ export default {
   },
   beforeDestroy() {
     this.pause();
+    this.bus.$off('timerStart');
   },
   methods: {
     start() {
