@@ -41,6 +41,13 @@ export default {
     // 监听数字完成量
     this.bus.$on('numberSolved', this.handleNums);
   },
+  beforeDestroy () {
+    // 解除事件绑定
+    this.bus.$off('operateDisabled');
+    this.bus.$off('checkDisabled');
+    this.bus.$off('numDisabled');
+    this.bus.$off('numberSolved');
+  },
   methods: {
     inputNum (n) {
       if (n <= this.keyRange && !this.numberSolved[n] && !this.numDisabled) {
