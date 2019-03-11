@@ -1,6 +1,21 @@
-var HomePage = {
-  props: ['settings'],
-  data: function () {
+import Mdui from 'mdui/dist/js/mdui.min.js';
+import Grid from '@/script/grid.js';
+import LSManager from '@/script/localStorage_manager.js';
+import MduiDialog from '@/common/mdui_dialog.js';
+import MduiHeader from '@/common/mdui_header.js';
+import GameKeyboard from './components/game_keyboard';
+import GameGrid from './components/game_grid';
+import GameSelector from './components/game_selector';
+
+export default {
+  name: 'HomePage',
+  props: {
+    settings: {
+      type: Object,
+      require: true
+    }
+  },
+  data () {
     return {
       size: 0,
       levels: {
@@ -10,188 +25,234 @@ var HomePage = {
       },
       originGrid: [],
       gameGrid: [],
+      answer: 0,// 选中单元格答案
       id: 0,// 游戏id
-      answer: 0// 选中单元格答案
-    }
+    };
   },
-  template: '\
-  <div class="home">\
-    <!-- 新游戏对话框 -->\
-    <mdui-dialog\
-      id="restart"\
-      title="确认开始新游戏?"\
-      content="你将丢失当前游戏进度"\
-      :close=true\
-      :confirm="clear">\
-    </mdui-dialog>\
-    <!-- 彩蛋游戏对话框 -->\
-    <mdui-dialog\
-      id="easterEgg"\
-      title="开始彩蛋游戏?"\
-      content="你将丢失当前游戏进度"\
-      :close=true\
-      :confirm="start">\
-    </mdui-dialog>\
-  \
-    <mdui-header title="Sudoku" github="https://github.com/Styx11/Sudoku"\
-      :timer="settings.timer"\
-      @openEgg="openEgg"\
-    >\
-      <template slot="menu">\
-        <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white"\
-          mdui-tooltip="{content: \'取消收藏\'}"\
-          v-if="size && marked" @click="delBook"\
-        >\
-          <i class="mdui-icon material-icons">bookmark</i>\
-        </button>\
-        <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white"\
-          mdui-tooltip="{content: \'添加收藏\'}"\
-          v-if="size && !marked" @click="markBook"\
-        >\
-          <i class="mdui-icon material-icons">bookmark_border</i>\
-        </button>\
-        <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: \'#menu\'}">\
-            <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>\
-        </a>\
-        <ul class="mdui-menu" id="menu">\
-          <li v-if="settings.tips && size" class="mdui-menu-item mdui-ripper"\
-            :disabled="!answer" @click="showTip">\
-            <a class="mdui-ripple">显示该单元</a>\
-          </li>\
-          <li v-if="size" class="mdui-menu-item mdui-ripper" @click="reset">\
-            <a class="mdui-ripple">重置</a>\
-          </li>\
-          <li v-if="size" class="mdui-menu-item mdui-ripper" mdui-dialog="{target: \'#restart\', history: false}">\
-              <a class="mdui-ripple">新游戏</a>\
-          </li>\
-          <li class="mdui-menu-item mdui-ripper">\
-            <router-link to="/help">帮助 & 反馈</router-link>\
-          </li>\
-          <li class="mdui-menu-item mdui-ripper">\
-            <router-link to="/settings">设置</router-link>\
-          </li>\
-        </ul>\
-      </template>\
-    </mdui-header>\
-  \
-    <div class="game">\
-      <game-grid\
-        v-if="size"\
-        :grid="gameGrid"\
-        :origin-grid="originGrid"\
-        :disableSolved="settings.disableSolved"\
-        @start="clear"\
-        @tipsToggle="tipsToggle"\
-      ></game-grid>\
-      <game-selector v-else @start="start($event.size, $event.level)"></game-selector>\
-    </div>\
-    \
-    <game-keyboard\
-      :key-range="size"\
-      :disableSolved="settings.disableSolved">\
-    </game-keyboard>\
-  </div>\
-  ',
-  created: function () {
-    var originGrid = localStorageManager.getGameState("originGrid");// 应用本地缓存
-    var gameGrid = localStorageManager.getGameState("gameGrid");
-    var id = localStorageManager.getGameState("gameID");
+  created () {
+    const originGrid = LSManager.getGameState('originGrid');// 应用本地缓存
+    const gameGrid = LSManager.getGameState('gameGrid');
+    const id = LSManager.getGameState('gameID');
 
     if (!originGrid || !gameGrid || !id) return;
     this.originGrid = originGrid;
+    this.size = gameGrid.length;
     this.gameGrid = gameGrid;
     this.id = id;
-    this.size = gameGrid.length;
   },
   computed: {
-    marked: function () {// 当前游戏是否被收藏
-      var id = this.id;
-      return this.$root.books.some(function (item) {
-        return (item.id === id);
-      })
+    marked () {
+      const id = this.id;
+      if (this.$root.books) {
+        return this.$root.books.some(item => item.id === id);
+      }
     }
   },
   methods: {
-    createID: function () {// 根据时间创建游戏id
-      var id = (new Date()).getTime();
-      return id;
+    createID () {// 根据时间创建游戏id
+      const id = (new Date()).getTime();
+      return id.toString();
     },
-    markBook: function () {// 收藏游戏，包括id，终盘，游戏盘
-      var book = {
+    markBook () {// 收藏游戏，包括id，终盘，游戏盘
+      const book = {
         id: this.id,
         originGrid: JSON.stringify(this.originGrid),
-        gameGrid: JSON.stringify(this.gameGrid)
-      }
-      bus.$emit('markBook', book);
-      mdui.snackbar({// 打开底部snackbar
-        message: '收藏成功',
-        timeout: 3000
-      });
+        gameGrid: JSON.stringify(this.gameGrid),
+      };
+      this.bus.$emit('markBook', book);
+      Mdui.snackbar('收藏成功');// 打开底部snackbar
     },
-    delBook: function () {// 根据id删除收藏
-      var id = this.id;
-      bus.$emit('delBook', id);
-      mdui.snackbar({
-        message: '取消收藏',
-        timeout: 3000
-      });
+    delBook () {// 根据id删除收藏
+      const id = this.id;
+      this.bus.$emit('delBook', id);
+      Mdui.snackbar('取消收藏');
     },
-    tipsToggle: function (e) {
-      var row = e.rowIndex;
-      var col = e.colIndex;
-      var answer = this.originGrid[row][col];
-      
-      if (this.gameGrid[row][col]) return this.answer = 0;// 当选中原始数字时禁用
+    tipsToggle (e) {
+      const row = e.rowIndex;
+      const col = e.colIndex;
+      const answer = this.originGrid[row][col];
 
+      // 当选中原始数字时禁用
+      if (this.gameGrid[row][col]) return this.answer = 0;
       this.answer = answer;
     },
-    showTip: function () {
-      bus.$emit('inputNum', this.answer);
+    showTip () {
+      this.bus.$emit('inputNum', this.answer);
     },
-    setGameState: function () {
-      localStorageManager.setGameState("originGrid", this.originGrid);
-      localStorageManager.setGameState("gameGrid", this.gameGrid);
-      localStorageManager.setGameState("gameID", this.id);
+    setGameState () {
+      LSManager.setGameState('originGrid', this.originGrid);
+      LSManager.setGameState('gameGrid', this.gameGrid);
+      LSManager.setGameState('gameID', this.id);
     },
-    disableBtn: function () {// 禁用所有按钮
-      bus.$emit('numDisabled', true);
-      bus.$emit('checkDisabled', true);
-      bus.$emit('opreateDisabled', true);
+    disableBtn () {// 禁用所有按钮
+      this.bus.$emit('numDisabled', true);
+      this.bus.$emit('checkDisabled', true);
+      this.bus.$emit('operateDisabled', true);
     },
-    reset: function () {
-      bus.$emit('resetGrid');
+    reset () {
+      this.bus.$emit('resetGrid');
     },
-    clear: function () {// 结束当前游戏
-      if (this.settings.timer) bus.$emit('timerStart', false);
-      localStorageManager.clearGameState();// 清除上一次缓存
-
+    clear () {// 结束当前游戏
+      if (this.settings.timer) this.bus.$emit('timerStart', false);
+      
+      LSManager.clearGameState();// 清除上一次缓存
       this.size = 0;
       this.disableBtn();
     },
-    start: function (size, gameLevel) {
-      this.size = size || 9;// 彩蛋游戏为9x9
+    start ({level, size = 9} = {}) {// 彩蛋游戏为9x9
+      if (this.settings.timer) this.bus.$emit('timerStart', true);
 
-      if (this.settings.timer) bus.$emit('timerStart', true);
-
-      var id = this.createID();
-      var grid = new Grid(this.size);
-      var level = gameLevel !== undefined
-        ? Math.ceil(this.size * this.levels[gameLevel])
+      this.size = size;
+      const id = this.createID();
+      const grid = new Grid(this.size);
+      let gameLevel = level !== undefined
+        ? Math.ceil(this.size * this.levels[level])
         : 0;
-
-      if (size === 4 ) level = Math.floor((this.size + 1) * this.levels[gameLevel]);
+      if (this.size === 4 ) level = Math.floor((this.size + 1) * this.levels[level]);
 
       this.id = id;
       this.originGrid = grid.cells;
-      this.gameGrid = level// 选择开启普通或彩蛋游戏
-        ? grid.gameGrid(level)
+      this.gameGrid = gameLevel// 选择开启普通或彩蛋游戏
+        ? grid.gameGrid(gameLevel)
         : grid.easterEgg();
       this.setGameState();// 记录缓存
     },
-    openEgg: function () {
+    openEgg () {
       if (this.size) return;// 在游戏选择界面可以触发彩蛋
-      var instEgg = new mdui.Dialog('#easterEgg', {history: false});
-      instEgg.open();
+      const eggDialog = new Mdui.Dialog('#easterEgg', {history: false});
+      eggDialog.open();
     }
+  },
+  render () {
+    const bookBtn = () => {
+      if (this.size && this.marked) {
+        return (
+          <button
+            class='mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white'
+            mdui-tooltip='{content: "取消收藏"}'
+            onClick={this.delBook.bind(this)}
+          >
+            <i class='mdui-icon material-icons'>bookmark</i>
+          </button>
+        );
+      } else if (this.size && !this.marked) {
+        return (
+          <button
+            class='mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white'
+            mdui-tooltip='{content: "添加收藏"}'
+            onClick={this.markBook.bind(this)}
+          >
+            <i class='mdui-icon material-icons'>bookmark_border</i>
+          </button>
+        );
+      }
+    };
+    const tipBtn = () => {
+      if (this.settings.tips && this.size) {
+        return (
+          <li
+            class='mdui-menu-item mdui-ripper'
+            disabled={!this.answer}
+            onClick={this.showTip.bind(this)}
+          >
+            <a class='mdui-ripple'>显示该单元</a>
+          </li>
+        );
+      }
+    };
+    const resetBtn = () => {
+      if (this.size) {
+        return (
+          <li
+            class='mdui-menu-item mdui-ripper'
+            onClick={this.reset.bind(this)}
+          >
+            <a class='mdui-ripple'>重置</a>
+          </li>
+        );
+      }
+    };
+    const newGameBtn = () => {
+      if (this.size) {
+        return (
+          <li
+            class='mdui-menu-item mdui-ripper'
+            mdui-dialog='{target: "#restart", history: false}'
+          >
+            <a class='mdui-ripple'>新游戏</a>
+          </li>
+        );
+      }
+    };
+    const gameSection = () => {
+      if (this.size) {
+        return (
+          <GameGrid
+            grid={this.gameGrid}
+            originGrid={this.originGrid}
+            disableSolved={this.settings.disableSolved}
+            onStart={this.clear.bind(this)}
+            onTipsToggle={this.tipsToggle.bind(this)}
+          />
+        );
+      } else {
+        return (
+          <GameSelector
+            onStart={this.start.bind(this)}
+          />
+        );
+      }
+    };
+
+    return (
+      <div class='home'>
+        <MduiDialog
+          id='restart'
+          title='确认开始游戏?'
+          content='你将丢失当前游戏进度'
+          close={true}
+          confirm={this.clear.bind(this)}
+        />
+        <MduiDialog
+          id='easterEgg'
+          title='开始彩蛋游戏?'
+          content='你将丢失当前游戏进度'
+          close={true}
+          confirm={this.start.bind(this)}
+        />
+        <MduiHeader
+          title='Sudoku'
+          github='https://github.com/Styx11/Sudoku'
+          timer={this.settings.timer}
+          onOpenEgg={this.openEgg.bind(this)}
+        >
+          <template slot='menu'>
+            { bookBtn() }
+            <a class='mdui-btn mdui-btn-icon mdui-ripple' mdui-menu='{target: "#menu"}'>
+                <i class='mdui-icon material-icons mdui-text-color-white'>more_vert</i>
+            </a>
+            <ul class='mdui-menu' id='menu'>
+              { tipBtn() }
+              { resetBtn() }
+              { newGameBtn() }
+              <li class='mdui-menu-item mdui-ripper'>
+                <a>帮助 & 反馈</a>
+              </li>
+              <li class='mdui-menu-item mdui-ripper'>
+                <a>设置</a>
+              </li>
+            </ul>
+          </template>
+        </MduiHeader>
+
+        <div class='game'>
+          { gameSection() }
+        </div>
+        <GameKeyboard
+          keyRange={this.size}
+          disableSolved={this.settings.disableSolved}
+        />
+      </div>
+    );
   }
-}
+};
