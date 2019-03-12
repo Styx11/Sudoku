@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import router from './router';
 
 const Mdui = require('mdui/dist/js/mdui.min.js');
 
@@ -9,6 +10,7 @@ Vue.prototype.bus = new Vue();
 
 new Vue({
   el: '#root',
+  router,
   data: {
 
   },
