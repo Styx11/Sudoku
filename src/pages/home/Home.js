@@ -9,6 +9,13 @@ import GameSelector from './components/game_selector';
 
 export default {
   name: 'HomePage',
+  components: {
+    MduiDialog,
+    MduiHeader,
+    GameGrid,
+    GameKeyboard,
+    GameSelector,
+  },
   props: {
     settings: {
       type: Object,
@@ -236,10 +243,10 @@ export default {
               { resetBtn() }
               { newGameBtn() }
               <li class='mdui-menu-item mdui-ripper'>
-                <a>帮助 & 反馈</a>
+                <router-link to='/help'>帮助 & 反馈</router-link>
               </li>
               <li class='mdui-menu-item mdui-ripper'>
-                <a>设置</a>
+                <router-link to='/settings'>设置</router-link>
               </li>
             </ul>
           </template>
