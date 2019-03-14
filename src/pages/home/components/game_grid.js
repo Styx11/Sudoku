@@ -4,6 +4,9 @@ import LSManager from '@/script/localStorage_manager';
 
 export default {
   name: 'GameGrid',
+  components: {
+    MduiDialog,
+  },
   props: {
     grid: {
       type: Array,
