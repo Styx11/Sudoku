@@ -5,6 +5,8 @@ import HelpPage from '@/pages/help/Help';
 import HelpHome from '@/pages/help/components/help_home';
 import HelpHow from '@/pages/help/components/help_how';
 import HelpTrick from '@/pages/help/components/help_trick';
+import SettingsPage from '@/pages/settings/Settings';
+import SettingsHome from '@/pages/settings/components/settings_home';
 
 Vue.use(Router);
 
@@ -17,6 +19,11 @@ export default new Router({
         { path: 'how', component: HelpHow },
         { path: 'trick', component: HelpTrick },
       ]
-    }
+    },
+    { path: '/settings', component: SettingsPage,
+      children: [
+        { path: '', component: SettingsHome },
+      ]
+    },
   ]
 });
