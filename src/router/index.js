@@ -7,6 +7,7 @@ import HelpHow from '@/pages/help/components/help_how';
 import HelpTrick from '@/pages/help/components/help_trick';
 import SettingsPage from '@/pages/settings/Settings';
 import SettingsHome from '@/pages/settings/components/settings_home';
+import SettingsBooks from '@/pages/settings/components/settings_books';
 
 Vue.use(Router);
 
@@ -23,6 +24,7 @@ export default new Router({
     { path: '/settings', component: SettingsPage,
       children: [
         { path: '', component: SettingsHome },
+        { path: 'books', component: SettingsBooks }
       ]
     },
   ]
