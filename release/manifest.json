@@ -1,11 +1,11 @@
 {
   "name": "Sudoku",
   "short_name": "Sudoku",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#fff",
   "description": "A sudoku game by:github@styx11.",
-  ​​"orientation": "portrait-primary",
+  "orientation": "portrait-primary",
   "icons": [{
     "src": "icons/Android_icons_package/android-icon-36x36.png",
     "sizes": "36x36",
