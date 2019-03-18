@@ -18,6 +18,7 @@
 }
 @media only screen and (min-width: 1025px) {
   .game {
+    top: -2rem;
     margin: 0 auto;
   }
 }
@@ -509,8 +510,8 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
 }
 @media only screen and (min-width: 1025px) {
   .selector-btn {
-    margin: 0 21%;
-    top: 20rem;
+    margin: 0 10%;
+    top: 15rem;
   }
 }
 
@@ -628,8 +629,8 @@ tr.grid-row-4:nth-child(2) td.grid-cell{
     width: 6.6rem;
     height: 14rem;
     left: unset;
-    right: 22rem;
-    bottom: 22rem;
+    right: 10rem;
+    bottom: 20rem;
     background-color: unset;
   }
   .keyboard-input {
