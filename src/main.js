@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import router from './router';
+import store from './store';
 import KBManager from '@/script/keyboard_manager';
 import LSManager from '@/script/localStorage_manager';
 
@@ -16,6 +17,7 @@ Vue.prototype.bus = bus;
 new Vue({
   el: '#root',
   router,
+  store,
   data: {
     settings: {
       tips: false,
