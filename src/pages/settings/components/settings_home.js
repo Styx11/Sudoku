@@ -1,23 +1,18 @@
 import MduiHeader from '@/common/mdui_header';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'SettingsHome',
   components: {
     MduiHeader,
   },
-  props: {
-    settings: {
-      type: Object,
-      require: true
-    },
-  },
-  data () {
-    return {
-      tips: this.settings.tips,
-      timer: this.settings.timer,
-      disableSolved: this.settings.disableSolved,
-      dark: this.settings.dark,
-    };
+  computed: {
+    ...mapState({
+      tips: state => state.settings.tips,
+      timer: state => state.settings.timer,
+      disableSolved: state => state.settings.disableSolved,
+      dark: state => state.settings.dark,
+    }),
   },
   methods: {
     goBack () {
@@ -25,18 +20,14 @@ export default {
         ? this.$router.go(-1)
         : this.$router.push('/');
     },
-    getSets (item, setting) {
-      this.bus.$emit('getSets', {
-        item,
-        setting
-      });
-    },
+    ...mapActions([
+      'mutateSettings'
+    ]),
     handleInput (e) {
       const setting = e.target.name;
       const value = !this[setting];
       
-      this[setting] = value;
-      this.getSets(setting, value);
+      this.mutateSettings({ setting, value });
     },
   },
   render () {
@@ -111,7 +102,7 @@ export default {
           </div>
         </router-link>
         <li class='mdui-subheader mdui-text-color-theme-accent'>版本</li>
-        <li class='mdui-list-item mdui-ripple'>2.0.0</li>
+        <li class='mdui-list-item mdui-ripple'>2.1.0</li>
       </ul>
       </div>
     );

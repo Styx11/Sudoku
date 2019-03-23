@@ -1,3 +1,4 @@
+import { mapActions } from 'vuex';
 import Mdui from 'mdui/dist/js/mdui.min.js';
 import Grid from '@/script/grid.js';
 import LSManager from '@/script/localStorage_manager.js';
@@ -16,12 +17,6 @@ export default {
     GameKeyboard,
     GameSelector,
   },
-  props: {
-    settings: {
-      type: Object,
-      require: true
-    }
-  },
   data () {
     return {
       size: 0,
@@ -36,6 +31,17 @@ export default {
       id: 0,// 游戏id
     };
   },
+  computed: {
+    marked () {
+      const id = this.id;
+      if (this.$store.state.books) {
+        return this.$store.state.books.some(item => item.id === id);
+      }
+    },
+    settings () {
+      return this.$store.state.settings;
+    }
+  },
   created () {
     const originGrid = LSManager.getGameState('originGrid');// 应用本地缓存
     const gameGrid = LSManager.getGameState('gameGrid');
@@ -47,31 +53,27 @@ export default {
     this.gameGrid = gameGrid;
     this.id = id;
   },
-  computed: {
-    marked () {
-      const id = this.id;
-      if (this.$root.books) {
-        return this.$root.books.some(item => item.id === id);
-      }
-    }
-  },
   methods: {
     createID () {// 根据时间创建游戏id
       const id = (new Date()).getTime();
       return id.toString();
     },
-    markBook () {// 收藏游戏，包括id，终盘，游戏盘
+    ...mapActions([// 提交更改
+      'markBook',
+      'delBook',
+    ]),
+    markTheBook () {// 收藏游戏，包括id，终盘，游戏盘
       const book = {
         id: this.id,
         originGrid: JSON.stringify(this.originGrid),
         gameGrid: JSON.stringify(this.gameGrid),
       };
-      this.bus.$emit('markBook', book);
+      this.markBook(book);
       Mdui.snackbar('收藏成功');// 打开底部snackbar
     },
-    delBook () {// 根据id删除收藏
+    delTheBook () {// 根据id删除收藏
       const id = this.id;
-      this.bus.$emit('delBook', id);
+      this.delBook(id);
       Mdui.snackbar('取消收藏');
     },
     tipsToggle (e) {
@@ -137,7 +139,7 @@ export default {
           <button
             class='mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white'
             mdui-tooltip='{content: "取消收藏"}'
-            onClick={this.delBook.bind(this)}
+            onClick={this.delTheBook.bind(this)}
           >
             <i class='mdui-icon material-icons'>bookmark</i>
           </button>
@@ -147,7 +149,7 @@ export default {
           <button
             class='mdui-btn mdui-btn-icon mdui-ripple mdui-text-color-white'
             mdui-tooltip='{content: "添加收藏"}'
-            onClick={this.markBook.bind(this)}
+            onClick={this.markTheBook.bind(this)}
           >
             <i class='mdui-icon material-icons'>bookmark_border</i>
           </button>

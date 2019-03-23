@@ -1,9 +1,5 @@
 export default {
   name: 'SettingsPage',
-  props: {
-    slideName: String,
-    settings: Object,
-  },
   data () {
     return {
       settingsRoute: ''
@@ -14,6 +10,9 @@ export default {
       return {
         'settingsRoute': this.settingsRoute === '/settings'// 当切换至home页时，增加overflow，解决header抖动
       };
+    },
+    slideName () {
+      return this.$store.state.slideName;
     }
   },
   created () {
@@ -28,7 +27,7 @@ export default {
     return (
       <div class='settings' {...{class: this.settingsRouteClass}}>
         <transition enter-active-class={this.slideName}>
-          <router-view settings={this.settings}></router-view>
+          <router-view/>
         </transition>
       </div>
     );

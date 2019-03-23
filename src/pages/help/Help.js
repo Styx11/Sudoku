@@ -1,8 +1,5 @@
 export default {
   name: 'HelpPage',
-  props: {
-    slideName: String,
-  },
   data () {
     return {
       helpRoute: ''
@@ -13,6 +10,9 @@ export default {
       return {
         'helpRoute': this.helpRoute === '/help'// 当切换至help-home页时，增加overflow，解决header抖动
       };
+    },
+    slideName () {
+      return this.$store.state.slideName;
     }
   },
   created () {
