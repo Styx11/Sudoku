@@ -1,3 +1,4 @@
+import { mapActions, mapState } from 'vuex';
 import FabDial from './fab_dial';
 import BookMark from './book_mark';
 import MduiHeader from '@/common/mdui_header';
@@ -12,21 +13,26 @@ export default {
   },
   data () {
     return {
-      books: [],
       bookChecks: [],
       edit: false,
     };
   },
+  computed: {
+    ...mapState([
+      'books',
+    ]),
+  },
   created () {
-    const books = this.$root.books;
-    const bookSize = books.length;
+    const bookSize = this.books.length;
     
-    this.books = books;
     for (let i=0; i<bookSize; i++) {
       this.$set(this.bookChecks, i, false);
     }
   },
   methods: {
+    ...mapActions([
+      'delBooks',
+    ]),
     goBack () {
       window.history.length > 1
         ? this.$router.go(-1)
@@ -41,7 +47,7 @@ export default {
     handleDel () {// 删除
       const hasSelBook = this.bookChecks.some(value => value);// 判断列表中是否有选中书签true/false
       if (hasSelBook) {
-        this.bus.$emit('delBooks', this.bookChecks);
+        this.delBooks(this.bookChecks);
       }
     },
     handleSelAll () {// 全选/反选
@@ -50,11 +56,9 @@ export default {
     }
   },
   watch: {
-    '$root.books' () {// 当根实例书签列表改变时，改变书签列表和选中项
-      const newBooks = this.$root.books;
-      const bookSize = newBooks.length;
+    books () {// 当根实例书签列表改变时，改变书签列表和选中项
+      const bookSize = this.books.length;
 
-      this.books = newBooks;
       for (let i=0; i<bookSize; i++) {
         this.$set(this.bookChecks, i, false);
       }
