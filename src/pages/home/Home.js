@@ -117,7 +117,7 @@ export default {
       let gameLevel = level !== undefined
         ? Math.ceil(this.size * this.levels[level])
         : 0;
-      if (this.size === 4 ) level = Math.floor((this.size + 1) * this.levels[level]);
+      if (this.size === 4 ) gameLevel = Math.floor((this.size + 1) * this.levels[level]);
 
       this.id = id;
       this.originGrid = grid.cells;
