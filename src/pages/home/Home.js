@@ -102,14 +102,14 @@ export default {
       this.bus.$emit('resetGrid');
     },
     clear () {// 结束当前游戏
-      if (this.settings.timer) this.bus.$emit('timerStart', false);
+      if (this.settings.timer) this.$store.dispatch('toggleTimer', false);
       
       LSManager.clearGameState();// 清除上一次缓存
       this.size = 0;
       this.disableBtn();
     },
     start ({level, size = 9} = {}) {// 彩蛋游戏为9x9
-      if (this.settings.timer) this.bus.$emit('timerStart', true);
+      if (this.settings.timer) this.$store.dispatch('toggleTimer', true);
 
       this.size = size;
       const id = this.createID();
