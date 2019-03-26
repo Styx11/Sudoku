@@ -1,4 +1,5 @@
 import LSManager from '../script/localStorage_manager';
+import { mapState } from 'vuex';
 
 export default {
   name: 'GameTimer',
@@ -8,6 +9,11 @@ export default {
       second: 0,
       timer: null,
     };
+  },
+  computed: {
+    ...mapState({
+      startTimer: state => state.gameStore.timerStart,
+    })
   },
   render() {
     const minute = this.minute;
@@ -29,14 +35,16 @@ export default {
     this.second = timerState ? timerState.second : 0;
     this.minute = timerState ? timerState.minute : 0;
     this.timer = null;
-    this.start();
-  },
-  mounted() {
-    this.bus.$on('timerStart', this.timerStart);
+    this.$store.dispatch('toggleTimer', true);// timerStart 未在本地保存，所以此处将其设为 true
   },
   beforeDestroy() {
     this.pause();
-    this.bus.$off('timerStart');
+    this.$store.dispatch('toggleTimer', false);
+  },
+  watch: {
+    startTimer () {// 监测是否开启计时器
+      this.timerStart(this.startTimer);
+    }
   },
   methods: {
     start() {
@@ -61,6 +69,7 @@ export default {
       this.minute = 0;
       this.second = 0;
       this.timer = null;
+      LSManager.setGameState('timer', {minute: 0, second: 0});
     },
     timerStart(start) {
       if (start) {
