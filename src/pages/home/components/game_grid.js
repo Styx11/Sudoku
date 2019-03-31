@@ -1,4 +1,5 @@
 const Mdui = require('mdui/dist/js/mdui.min.js');
+import { mapState, mapGetters } from 'vuex';
 import MduiDialog from '@/common/mdui_dialog';
 import LSManager from '@/script/localStorage_manager';
 
@@ -7,24 +8,9 @@ export default {
   components: {
     MduiDialog,
   },
-  props: {
-    grid: {
-      type: Array,
-      require: true
-    },
-    originGrid: {
-      type: Array,
-      require: true
-    },
-    disableSolved: {
-      type: Boolean,
-      require: false
-    },
-  },
   data () {
     return {
-      gameGrid: JSON.parse(JSON.stringify(this.grid)),
-      size: this.grid.length,
+      gamingGrid: [],
       // 用于当前选中单元格
       selectedCell: {
         rowIndex: undefined,
@@ -46,17 +32,26 @@ export default {
     },
     dialogCorrect () {
       return new Mdui.Dialog('#correct', {history: false});
-    }
+    },
+    ...mapState({
+      originGrid: state => state.gameStore.originGrid,
+      gameGrid: state => state.gameStore.gameGrid,
+      disableSolved: state => state.settings.disableSolved,
+    }),
+    ...mapGetters([
+      'size',
+    ])
   },
   created () {
     const markGrid = LSManager.getGameState('markGrid');// 游戏中用于标记的九宫格缓存
     const gamingGrid = LSManager.getGameState('gamingGrid');// 游戏中用于填写的九宫格缓存
 
-    if (gamingGrid) this.gameGrid = gamingGrid;
+    if (gamingGrid) this.gamingGrid = gamingGrid;
     if (markGrid) return this.markGrid = markGrid;
 
     // 将数独九宫格与另一个九宫格关联
     // 它记录了单元格是否被标记
+    this.gamingGrid = JSON.parse(JSON.stringify(this.gameGrid));
     for (let row=0; row<this.size; row++) {
       this.$set(this.markGrid, row, Array.apply(null, {length: this.size}));
     }
@@ -87,18 +82,18 @@ export default {
   },
   watch: {
     // 当九宫格无变化时禁用查错按钮
-    gameGrid: function () {
-      const grid = JSON.stringify(this.grid);
+    gamingGrid: function () {
       const gameGrid = JSON.stringify(this.gameGrid);
-      const disabled = (gameGrid ===  grid);// 禁用查错
+      const gamingGrid = JSON.stringify(this.gamingGrid);
+      const disabled = (gamingGrid ===  gameGrid);// 禁用查错
       
       this.bus.$emit('checkDisabled', disabled);
     }
   },
   methods: {
     selectTile (rowIndex, colIndex) {
-      const gridCell = this.grid[rowIndex][colIndex];
-      const gameCell = this.gameGrid[rowIndex][colIndex];
+      const gridCell = this.gameGrid[rowIndex][colIndex];
+      const gameCell = this.gamingGrid[rowIndex][colIndex];
 
       this.selectedCell = {
         rowIndex,
@@ -118,17 +113,17 @@ export default {
       const col = this.selectedCell.colIndex;
 
       if (row === undefined || col === undefined) return;// 未选中任何单元格
-      if (this.grid[row][col]) return;// 选中原始单元格
+      if (this.gameGrid[row][col]) return;// 选中原始单元格
 
       // 解决Vue无法检测 vm.items[indexOfItem] = newValue 变更的数组
-      this.$set(this.gameGrid[row], col, value);
+      this.$set(this.gamingGrid[row], col, value);
       this.markTile(row, col, 0);// 清除标记
       this.markSameNum();// 标记相同数字
       this.disableSolvedNum();
 
       this.bus.$emit('operateDisabled', !value);// 启用/禁用操作键
 
-      LSManager.setGameState('gamingGrid', this.gameGrid);// 记录缓存
+      LSManager.setGameState('gamingGrid', this.gamingGrid);// 记录缓存
     },
 
     // 处理数字数量，当开启时keyboard将其禁用
@@ -140,7 +135,7 @@ export default {
 
       for (let row=0; row<this.size; row++) {
         for (let col=0; col<this.size; col++) {
-          num = this.gameGrid[row][col];
+          num = this.gamingGrid[row][col];
           if (!num) continue;
           nums[num] = nums[num] ? ++nums[num] : 1;
         }
@@ -154,8 +149,8 @@ export default {
       const col = this.selectedCell.colIndex;
 
       if (row === undefined || col === undefined) return;// 未选中任何单元格
-      if (this.grid[row][col]) return;// 不标记原始单元格
-      if (!this.gameGrid[row][col]) return;// 不标记空单元格
+      if (this.gameGrid[row][col]) return;// 不标记原始单元格
+      if (!this.gamingGrid[row][col]) return;// 不标记空单元格
 
       const markValue = this.markGrid[row][col] === 1 ? 0 : 1;
       this.markTile(row, col, markValue);
@@ -165,7 +160,7 @@ export default {
     markSameNum () {
       const rowIndex = this.selectedCell.rowIndex;
       const colIndex = this.selectedCell.colIndex;
-      const selectNum = this.gameGrid[rowIndex][colIndex];
+      const selectNum = this.gamingGrid[rowIndex][colIndex];
       
       // 标记相同数字
       for (let row=0; row<this.size; row++) {
@@ -179,7 +174,7 @@ export default {
           }
 
           // 相同标记，数字需存在且相等
-          if (this.gameGrid[row][col] === selectNum && this.gameGrid[row][col]) {
+          if (this.gamingGrid[row][col] === selectNum && this.gamingGrid[row][col]) {
             this.markTile(row, col, 4);
           }
         }
@@ -210,7 +205,7 @@ export default {
 
     // 重置游戏
     resetGame () {
-      this.gameGrid = JSON.parse(JSON.stringify(this.grid));
+      this.gamingGrid = JSON.parse(JSON.stringify(this.gameGrid));
 
       // 重置标记九宫格
       for (var row=0; row<this.size; row++) {
@@ -218,7 +213,7 @@ export default {
       }
 
       // 记录缓存
-      LSManager.setGameState('gamingGrid', this.gameGrid);
+      LSManager.setGameState('gamingGrid', this.gamingGrid);
       LSManager.setGameState('markGrid', this.markGrid);
     },
     checkGrid () {
@@ -227,12 +222,12 @@ export default {
 
       for (let row=0; row<this.size; row++) {
         for (let col=0; col<this.size; col++) {
-          if (!this.gameGrid[row][col]) {
+          if (!this.gamingGrid[row][col]) {
             gameComplete = false;
             continue;
           }
 
-          if (this.originGrid[row][col] !== this.gameGrid[row][col]) {
+          if (this.originGrid[row][col] !== this.gamingGrid[row][col]) {
             this.markTile(row, col, 2);
             answerCorrect = false;
           }
@@ -245,11 +240,11 @@ export default {
   },
   render () {
     const gameCell = (row, col, value) => {
-      if (value && this.grid[row][col]) {
+      if (value && this.gameGrid[row][col]) {
         return (
           <span>{ value }</span>
         );
-      } else if (value && !this.grid[row][col]) {
+      } else if (value && !this.gameGrid[row][col]) {
         return (
           <span class='mdui-text-color-blue-500'>{ value }</span>
         );
@@ -274,7 +269,7 @@ export default {
         });
     };
     const gameRow = () => {
-      return this.gameGrid
+      return this.gamingGrid
         .map((rValue, row) => {
           return (
             <tr class={`grid-row-${this.size}`}>
