@@ -1,4 +1,4 @@
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Mdui from 'mdui/dist/js/mdui.min.js';
 import Grid from '@/script/grid.js';
 import LSManager from '@/script/localStorage_manager.js';
@@ -19,28 +19,31 @@ export default {
   },
   data () {
     return {
-      size: 0,
       levels: {
         0: 1/3,
         1: 1/2,
         2: 2/3
       },
-      originGrid: [],
-      gameGrid: [],
       answer: 0,// 选中单元格答案
-      id: 0,// 游戏id
     };
   },
   computed: {
     marked () {
       const id = this.id;
-      if (this.$store.state.books) {
-        return this.$store.state.books.some(item => item.id === id);
+      if (this.books) {
+        return this.books.some(item => item.id === id);
       }
     },
-    settings () {
-      return this.$store.state.settings;
-    }
+    ...mapState({
+      originGrid: state => state.gameStore.originGrid,
+      gameGrid: state => state.gameStore.gameGrid,
+      settings: state => state.settings,
+      id: state => state.gameStore.id,
+      books: state => state.books,
+    }),
+    ...mapGetters([
+      'size'
+    ])
   },
   created () {
     const originGrid = LSManager.getGameState('originGrid');// 应用本地缓存
@@ -48,19 +51,21 @@ export default {
     const id = LSManager.getGameState('gameID');
 
     if (!originGrid || !gameGrid || !id) return;
-    this.originGrid = originGrid;
-    this.size = gameGrid.length;
-    this.gameGrid = gameGrid;
-    this.id = id;
+    this.initializeOriginGrid(originGrid);
+    this.initializeGameGrid(gameGrid);
+    this.initializeGameID(id);
   },
   methods: {
-    createID () {// 根据时间创建游戏id
-      const id = (new Date()).getTime();
-      return id.toString();
-    },
     ...mapActions([// 提交更改
       'markBook',
       'delBook',
+      'createID',
+      'toggleTimer',
+      'initializeOriginGrid',
+      'initializeGameGrid',
+      'initializeGameID',
+      'setGrids',
+      'clearGame',
     ]),
     markTheBook () {// 收藏游戏，包括id，终盘，游戏盘
       const book = {
@@ -102,28 +107,28 @@ export default {
       this.bus.$emit('resetGrid');
     },
     clear () {// 结束当前游戏
-      if (this.settings.timer) this.$store.dispatch('toggleTimer', false);
+      if (this.settings.timer) this.toggleTimer(false);
       
-      LSManager.clearGameState();// 清除上一次缓存
-      this.size = 0;
+      this.clearGame();
       this.disableBtn();
+      LSManager.clearGameState();// 清除上一次缓存
     },
     start ({level, size = 9} = {}) {// 彩蛋游戏为9x9
-      if (this.settings.timer) this.$store.dispatch('toggleTimer', true);
+      if (this.settings.timer) this.toggleTimer(true);
 
-      this.size = size;
-      const id = this.createID();
-      const grid = new Grid(this.size);
       let gameLevel = level !== undefined
-        ? Math.ceil(this.size * this.levels[level])
+        ? Math.ceil(size * this.levels[level])
         : 0;
-      if (this.size === 4 ) gameLevel = Math.floor((this.size + 1) * this.levels[level]);
+      if (size === 4 ) gameLevel = Math.floor((size + 1) * this.levels[level]);
 
-      this.id = id;
-      this.originGrid = grid.cells;
-      this.gameGrid = gameLevel// 选择开启普通或彩蛋游戏
+      const grid = new Grid(size);
+      const originGrid = grid.cells;
+      const gameGrid = gameLevel// 选择开启普通或彩蛋游戏
         ? grid.gameGrid(gameLevel)
         : grid.easterEgg();
+
+      this.createID();
+      this.setGrids({ originGrid, gameGrid });
       this.setGameState();// 记录缓存
     },
     openEgg () {
@@ -197,9 +202,6 @@ export default {
       if (this.size) {
         return (
           <GameGrid
-            grid={this.gameGrid}
-            originGrid={this.originGrid}
-            disableSolved={this.settings.disableSolved}
             onStart={this.clear.bind(this)}
             onTipsToggle={this.tipsToggle.bind(this)}
           />
