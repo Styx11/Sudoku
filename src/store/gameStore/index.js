@@ -1,4 +1,9 @@
+import kbStore from './kbStore';
+
 export default {
+  modules: {
+    kbStore,
+  },
   state () {
     return {
       timerStart: false,
