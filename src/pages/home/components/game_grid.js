@@ -1,5 +1,5 @@
 const Mdui = require('mdui/dist/js/mdui.min.js');
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import MduiDialog from '@/common/mdui_dialog';
 import LSManager from '@/script/localStorage_manager';
 
@@ -87,10 +87,16 @@ export default {
       const gamingGrid = JSON.stringify(this.gamingGrid);
       const disabled = (gamingGrid ===  gameGrid);// 禁用查错
       
-      this.bus.$emit('checkDisabled', disabled);
+      this.disableCheck(disabled);
     }
   },
   methods: {
+    ...mapActions([
+      'solveNum',
+      'disableNum',
+      'disableCheck',
+      'disableOperate',
+    ]),
     selectTile (rowIndex, colIndex) {
       const gridCell = this.gameGrid[rowIndex][colIndex];
       const gameCell = this.gamingGrid[rowIndex][colIndex];
@@ -103,8 +109,8 @@ export default {
       this.$emit('tipsToggle', this.selectedCell);// 选中单元格时，开关提示按钮
       if (!gridCell) this.disableSolvedNum();// 禁用数字量上线的数字
 
-      this.bus.$emit('numDisabled', gridCell);// 当选中原始单元格时禁用数字键盘
-      this.bus.$emit('operateDisabled', !gameCell || gridCell);// 选中空/原始单元格时禁用操作键
+      this.disableNum(!!gridCell);// 当选中原始单元格时禁用数字键盘
+      this.disableOperate(!gameCell || gridCell);// 选中空/原始单元格时禁用操作键
     },
 
     // 处理数字输入、删除
@@ -121,7 +127,7 @@ export default {
       this.markSameNum();// 标记相同数字
       this.disableSolvedNum();
 
-      this.bus.$emit('operateDisabled', !value);// 启用/禁用操作键
+      this.disableOperate(!value);// 启用/禁用操作键
 
       LSManager.setGameState('gamingGrid', this.gamingGrid);// 记录缓存
     },
@@ -131,7 +137,7 @@ export default {
       const nums = {};
       let num = 0;
 
-      if (!this.disableSolved) return this.bus.$emit('numberSolved', null);
+      if (!this.disableSolved) return;
 
       for (let row=0; row<this.size; row++) {
         for (let col=0; col<this.size; col++) {
@@ -140,7 +146,7 @@ export default {
           nums[num] = nums[num] ? ++nums[num] : 1;
         }
       }
-      this.bus.$emit('numberSolved', nums);
+      this.solveNum(nums);
     },
 
     // 数字标记回调
