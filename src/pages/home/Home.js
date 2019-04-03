@@ -66,6 +66,9 @@ export default {
       'initializeGameID',
       'setGrids',
       'clearGame',
+      'disableNum',
+      'disableCheck',
+      'disableOperate',
     ]),
     markTheBook () {// 收藏游戏，包括id，终盘，游戏盘
       const book = {
@@ -99,12 +102,13 @@ export default {
       LSManager.setGameState('gameID', this.id);
     },
     disableBtn () {// 禁用所有按钮
-      this.bus.$emit('numDisabled', true);
-      this.bus.$emit('checkDisabled', true);
-      this.bus.$emit('operateDisabled', true);
+      this.disableNum(true);
+      this.disableCheck(true);
+      this.disableOperate(true);
     },
     reset () {
       this.bus.$emit('resetGrid');
+      this.disableBtn();
     },
     clear () {// 结束当前游戏
       if (this.settings.timer) this.toggleTimer(false);

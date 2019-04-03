@@ -1,52 +1,18 @@
+import { mapState, mapGetters } from 'vuex';
+
 export default {
   name: 'GameKeyboard',
-  props: {
-    keyRange: {
-      type: Number,
-      require: true
-    },
-    disableSolved: {
-      type: Boolean,
-      require: false
-    }
-  },
-  data () {
-    return {
-      numDisabled: true,
-      checkDisabled: true,
-      operateDisabled: true,
-      numberSolved: {
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-        5: false,
-        6: false,
-        7: false,
-        8: false,
-        9: false 
-      }
-    };
-  },
-  mounted () {
-    // 监听操作键是否可用
-    this.bus.$on('operateDisabled', disabled => this.operateDisabled = disabled);
-
-    // 监听查错按钮是否可用
-    this.bus.$on('checkDisabled', disabled => this.checkDisabled = disabled);
-
-    // 监听数字键盘是否可用
-    this.bus.$on('numDisabled', disabled => this.numDisabled = disabled);
-
-    // 监听数字完成量
-    this.bus.$on('numberSolved', this.handleNums);
-  },
-  beforeDestroy () {
-    // 解除事件绑定
-    this.bus.$off('operateDisabled');
-    this.bus.$off('checkDisabled');
-    this.bus.$off('numDisabled');
-    this.bus.$off('numberSolved');
+  computed: {
+    ...mapState({
+      disableSolved: state => state.settings.disableSolved,
+      numDisabled: state => state.gameStore.kbStore.numDisabled,
+      numberSolved: state => state.gameStore.kbStore.numberSolved,
+      checkDisabled: state => state.gameStore.kbStore.checkDisabled,
+      operateDisabled: state => state.gameStore.kbStore.operateDisabled,
+    }),
+    ...mapGetters({
+      keyRange: 'size'
+    })
   },
   methods: {
     inputNum (n) {
@@ -86,12 +52,6 @@ export default {
         'keyboard-tile-disabled': disabled
       };
     },
-    // 处理数字完成量
-    handleNums (nums) {
-      for (let n in nums) {
-        this.numberSolved[n] = this.disableSolved && nums ? (nums[n] >= this.keyRange) : false;
-      }
-    }
   },
   render () {
     const numKeys = () => {
